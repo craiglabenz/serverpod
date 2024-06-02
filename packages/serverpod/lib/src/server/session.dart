@@ -134,6 +134,12 @@ abstract class Session {
   /// Returns the duration this session has been open.
   Duration get duration => DateTime.now().difference(_startTime);
 
+  /// List of methods this session will invoke when it closes.
+  final List<void Function()> _onCloseMethods = [];
+
+  /// Registers a method to be called when this session closes.
+  void addOnClose(void Function() fn) => _onCloseMethods.add(fn);
+
   /// Closes the session. This method should only be called if you have
   /// manually created a the [Session] e.g. by calling [createSession] on
   /// [Serverpod]. Closing the session finalizes and writes logs to the
@@ -148,6 +154,11 @@ abstract class Session {
   }) async {
     if (_closed) return null;
     _closed = true;
+
+    for (var fn in _onCloseMethods) {
+      fn.call();
+    }
+    _onCloseMethods.clear();
 
     try {
       server.messageCentral.removeListenersForSession(this);
