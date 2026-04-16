@@ -65,21 +65,32 @@ class GoogleIdpUtils {
 
   final AuthUsers _authUsers;
 
+  final AccountMerger _accountMerger;
+
   /// Creates a new instance of [GoogleIdpUtils].
   GoogleIdpUtils({
     required this.config,
     required final AuthUsers authUsers,
-  }) : _authUsers = authUsers;
+    required final AccountMerger accountMerger,
+  }) : _authUsers = authUsers,
+       _accountMerger = accountMerger;
 
   /// Authenticates a user using an access token.
   ///
   /// If the external user ID is not yet known in the system, a new `AuthUser`
   /// is created for it.
+  ///
+  /// If the associated Google account is already known to this app and is
+  /// different from the current user, then the accounts will be merged if
+  /// [shouldMergeAccounts] is true. If [shouldMergeAccounts] is false, then
+  /// an exception is thrown which should be caught by the caller and
+  /// transformed into an offer to merge involved accounts.
   Future<GoogleAuthSuccess> authenticate(
     final Session session, {
     required final String idToken,
     required final String? accessToken,
     required final Transaction? transaction,
+    final bool shouldMergeAccounts = false,
   }) async {
     final accountDetails = await fetchAccountDetails(
       session,
@@ -95,21 +106,78 @@ class GoogleIdpUtils {
       transaction: transaction,
     );
 
-    final createNewUser = googleAccount == null;
+    final googleAccountExists = googleAccount != null;
+    final currentAuthUserId = session.authenticated?.authUserId;
+    final userIsAuthenticated = currentAuthUserId != null;
+    final otherUserId = googleAccount?.authUserId;
+    final isSameUser = otherUserId != currentAuthUserId;
 
-    final AuthUserModel authUser = switch (createNewUser) {
-      true => await _authUsers.create(
+    if (googleAccountExists && userIsAuthenticated && !isSameUser) {
+      if (!shouldMergeAccounts) {
+        throw AccountAlreadyLinkedException();
+      }
+
+      await _accountMerger.merge(
         session,
+        userToRemoveId: googleAccount.authUserId,
+        userToKeepId: currentAuthUserId,
         transaction: transaction,
-      ),
-      false => await _authUsers.get(
+      );
+
+      // Reload the google account to get the new auth user id
+      googleAccount = await GoogleAccount.db.findFirstRow(
+        session,
+        where: (final t) => t.userIdentifier.equals(
+          accountDetails.userIdentifier,
+        ),
+        transaction: transaction,
+      );
+
+      if (googleAccount == null) {
+        session.log(
+          'The account merge between $currentAuthUserId and $otherUserId '
+          'failed to end with a valid GoogleAccount for '
+          '${accountDetails.userIdentifier}',
+          level: LogLevel.error,
+        );
+        throw AccountMergeFailedException(
+          userToKeepId: currentAuthUserId,
+          userToRemoveId: otherUserId!,
+        );
+      }
+
+      if (googleAccount.authUserId != currentAuthUserId) {
+        session.log(
+          'The account merge between $currentAuthUserId and $otherUserId failed '
+          'to map GoogleAccount Id ${googleAccount.id} to $otherUserId.',
+          level: LogLevel.error,
+        );
+      }
+    }
+
+    final AuthUserModel authUser;
+    if (!googleAccountExists) {
+      if (currentAuthUserId != null) {
+        authUser = await _authUsers.get(
+          session,
+          authUserId: currentAuthUserId,
+          transaction: transaction,
+        );
+      } else {
+        authUser = await _authUsers.create(
+          session,
+          transaction: transaction,
+        );
+      }
+    } else {
+      authUser = await _authUsers.get(
         session,
         authUserId: googleAccount!.authUserId,
         transaction: transaction,
-      ),
-    };
+      );
+    }
 
-    if (createNewUser) {
+    if (!googleAccountExists) {
       googleAccount = await linkGoogleAuthentication(
         session,
         authUserId: authUser.id,
@@ -119,10 +187,10 @@ class GoogleIdpUtils {
     }
 
     return (
-      googleAccountId: googleAccount.id!,
+      googleAccountId: googleAccount!.id!,
       authUserId: googleAccount.authUserId,
       details: accountDetails,
-      newAccount: createNewUser,
+      newAccount: !googleAccountExists && currentAuthUserId == null,
       scopes: authUser.scopes,
     );
   }

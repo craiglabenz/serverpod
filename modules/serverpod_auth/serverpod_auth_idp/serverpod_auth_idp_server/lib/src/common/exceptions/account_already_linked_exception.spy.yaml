@@ -1,0 +1,2 @@
+### Exception thrown when attempting to link an account that is already linked to another user.
+exception: AccountAlreadyLinkedException

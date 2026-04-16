@@ -48,10 +48,12 @@ class GoogleIdp {
     required final TokenIssuer tokenIssuer,
     final AuthUsers authUsers = const AuthUsers(),
     final UserProfiles userProfiles = const UserProfiles(),
+    final AccountMerger accountMerger = const AccountMerger(),
   }) {
     final utils = GoogleIdpUtils(
       config: config,
       authUsers: authUsers,
+      accountMerger: accountMerger,
     );
     final admin = GoogleIdpAdmin(
       utils: utils,

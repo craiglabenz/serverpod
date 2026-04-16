@@ -108,5 +108,6 @@ GoogleIdpUtils _createUtils() {
       }),
     ),
     authUsers: const AuthUsers(),
+    accountMerger: const AccountMerger(),
   );
 }

@@ -59,9 +59,9 @@ abstract class AppleAccount
           : _i1.UuidValueJsonExtension.fromJson(jsonSerialization['id']),
       userIdentifier: jsonSerialization['userIdentifier'] as String,
       refreshToken: jsonSerialization['refreshToken'] as String,
-      refreshTokenRequestedWithBundleIdentifier: _i1.BoolJsonExtension.fromJson(
-        jsonSerialization['refreshTokenRequestedWithBundleIdentifier'],
-      ),
+      refreshTokenRequestedWithBundleIdentifier:
+          jsonSerialization['refreshTokenRequestedWithBundleIdentifier']
+              as bool,
       lastRefreshedAt: jsonSerialization['lastRefreshedAt'] == null
           ? null
           : _i1.DateTimeJsonExtension.fromJson(
@@ -79,14 +79,8 @@ abstract class AppleAccount
           ? null
           : _i1.DateTimeJsonExtension.fromJson(jsonSerialization['createdAt']),
       email: jsonSerialization['email'] as String?,
-      isEmailVerified: jsonSerialization['isEmailVerified'] == null
-          ? null
-          : _i1.BoolJsonExtension.fromJson(
-              jsonSerialization['isEmailVerified'],
-            ),
-      isPrivateEmail: jsonSerialization['isPrivateEmail'] == null
-          ? null
-          : _i1.BoolJsonExtension.fromJson(jsonSerialization['isPrivateEmail']),
+      isEmailVerified: jsonSerialization['isEmailVerified'] as bool?,
+      isPrivateEmail: jsonSerialization['isPrivateEmail'] as bool?,
       firstName: jsonSerialization['firstName'] as String?,
       lastName: jsonSerialization['lastName'] as String?,
     );
@@ -587,8 +581,6 @@ class AppleAccountRepository {
     _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     _i1.Transaction? transaction,
     AppleAccountInclude? include,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<AppleAccount>(
       where: where?.call(AppleAccount.t),
@@ -599,8 +591,6 @@ class AppleAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -630,8 +620,6 @@ class AppleAccountRepository {
     _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     _i1.Transaction? transaction,
     AppleAccountInclude? include,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<AppleAccount>(
       where: where?.call(AppleAccount.t),
@@ -641,8 +629,6 @@ class AppleAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -652,15 +638,11 @@ class AppleAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     AppleAccountInclude? include,
-    _i1.LockMode? lockMode,
-    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<AppleAccount>(
       id,
       transaction: transaction,
       include: include,
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
     );
   }
 
@@ -818,22 +800,6 @@ class AppleAccountRepository {
     return session.db.count<AppleAccount>(
       where: where?.call(AppleAccount.t),
       limit: limit,
-      transaction: transaction,
-    );
-  }
-
-  /// Acquires row-level locks on [AppleAccount] rows matching the [where] expression.
-  Future<void> lockRows(
-    _i1.Session session, {
-    required _i1.WhereExpressionBuilder<AppleAccountTable> where,
-    required _i1.LockMode lockMode,
-    required _i1.Transaction transaction,
-    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
-  }) async {
-    return session.db.lockRows<AppleAccount>(
-      where: where(AppleAccount.t),
-      lockMode: lockMode,
-      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }

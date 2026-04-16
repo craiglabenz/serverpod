@@ -14,57 +14,61 @@ import 'package:serverpod/serverpod.dart' as _i1;
 import 'package:serverpod/protocol.dart' as _i2;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i3;
+import 'common/exceptions/account_already_linked_exception.dart' as _i4;
+import 'common/exceptions/account_merge_failed_exception.dart' as _i5;
 import 'common/rate_limited_request_attempt/models/rate_limited_request_attempt.dart'
-    as _i4;
-import 'common/secret_challenge/models/secret_challenge.dart' as _i5;
-import 'providers/anonymous/models/anonymous_account.dart' as _i6;
+    as _i6;
+import 'common/secret_challenge/models/secret_challenge.dart' as _i7;
+import 'providers/anonymous/models/anonymous_account.dart' as _i8;
 import 'providers/anonymous/models/exceptions/anonymous_account_blocked_exception.dart'
-    as _i7;
+    as _i9;
 import 'providers/anonymous/models/exceptions/anonymous_account_blocked_exception_reason.dart'
-    as _i8;
-import 'providers/apple/models/apple_account.dart' as _i9;
-import 'providers/email/models/email_account.dart' as _i10;
+    as _i10;
+import 'providers/apple/models/apple_account.dart' as _i11;
+import 'providers/email/models/email_account.dart' as _i12;
 import 'providers/email/models/email_account_password_reset_request.dart'
-    as _i11;
-import 'providers/email/models/email_account_request.dart' as _i12;
-import 'providers/email/models/exceptions/email_account_login_exception.dart'
     as _i13;
-import 'providers/email/models/exceptions/email_account_login_exception_reason.dart'
-    as _i14;
-import 'providers/email/models/exceptions/email_account_password_reset_exception.dart'
+import 'providers/email/models/email_account_request.dart' as _i14;
+import 'providers/email/models/exceptions/email_account_login_exception.dart'
     as _i15;
-import 'providers/email/models/exceptions/email_account_password_reset_exception_reason.dart'
+import 'providers/email/models/exceptions/email_account_login_exception_reason.dart'
     as _i16;
-import 'providers/email/models/exceptions/email_account_request_exception.dart'
+import 'providers/email/models/exceptions/email_account_password_reset_exception.dart'
     as _i17;
-import 'providers/email/models/exceptions/email_account_request_exception_reason.dart'
+import 'providers/email/models/exceptions/email_account_password_reset_exception_reason.dart'
     as _i18;
-import 'providers/facebook/models/facebook_access_token_verification_exception.dart'
+import 'providers/email/models/exceptions/email_account_request_exception.dart'
     as _i19;
-import 'providers/facebook/models/facebook_account.dart' as _i20;
-import 'providers/firebase/models/firebase_account.dart' as _i21;
+import 'providers/email/models/exceptions/email_account_request_exception_reason.dart'
+    as _i20;
+import 'providers/facebook/models/facebook_access_token_verification_exception.dart'
+    as _i21;
+import 'providers/facebook/models/facebook_account.dart' as _i22;
+import 'providers/firebase/models/firebase_account.dart' as _i23;
 import 'providers/firebase/models/firebase_id_token_verification_exception.dart'
-    as _i22;
+    as _i24;
 import 'providers/github/models/github_access_token_verification_exception.dart'
-    as _i23;
-import 'providers/github/models/github_account.dart' as _i24;
-import 'providers/google/models/google_account.dart' as _i25;
+    as _i25;
+import 'providers/github/models/github_account.dart' as _i26;
+import 'providers/google/models/google_account.dart' as _i27;
 import 'providers/google/models/google_id_token_verification_exception.dart'
-    as _i26;
+    as _i28;
 import 'providers/microsoft/models/microsoft_access_token_verification_exception.dart'
-    as _i27;
-import 'providers/microsoft/models/microsoft_account.dart' as _i28;
-import 'providers/passkey/models/passkey_account.dart' as _i29;
-import 'providers/passkey/models/passkey_challenge.dart' as _i30;
+    as _i29;
+import 'providers/microsoft/models/microsoft_account.dart' as _i30;
+import 'providers/passkey/models/passkey_account.dart' as _i31;
+import 'providers/passkey/models/passkey_challenge.dart' as _i32;
 import 'providers/passkey/models/passkey_challenge_expired_exception.dart'
-    as _i31;
+    as _i33;
 import 'providers/passkey/models/passkey_challenge_not_found_exception.dart'
-    as _i32;
-import 'providers/passkey/models/passkey_login_request.dart' as _i33;
-import 'providers/passkey/models/passkey_public_key_not_found_exception.dart'
     as _i34;
-import 'providers/passkey/models/passkey_registration_request.dart' as _i35;
-import 'dart:typed_data' as _i36;
+import 'providers/passkey/models/passkey_login_request.dart' as _i35;
+import 'providers/passkey/models/passkey_public_key_not_found_exception.dart'
+    as _i36;
+import 'providers/passkey/models/passkey_registration_request.dart' as _i37;
+import 'dart:typed_data' as _i38;
+export 'common/exceptions/account_already_linked_exception.dart';
+export 'common/exceptions/account_merge_failed_exception.dart';
 export 'common/rate_limited_request_attempt/models/rate_limited_request_attempt.dart';
 export 'common/secret_challenge/models/secret_challenge.dart';
 export 'providers/anonymous/models/anonymous_account.dart';
@@ -1277,254 +1281,272 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
 
-    if (t == _i4.RateLimitedRequestAttempt) {
-      return _i4.RateLimitedRequestAttempt.fromJson(data) as T;
+    if (t == _i4.AccountAlreadyLinkedException) {
+      return _i4.AccountAlreadyLinkedException.fromJson(data) as T;
     }
-    if (t == _i5.SecretChallenge) {
-      return _i5.SecretChallenge.fromJson(data) as T;
+    if (t == _i5.AccountMergeFailedException) {
+      return _i5.AccountMergeFailedException.fromJson(data) as T;
     }
-    if (t == _i6.AnonymousAccount) {
-      return _i6.AnonymousAccount.fromJson(data) as T;
+    if (t == _i6.RateLimitedRequestAttempt) {
+      return _i6.RateLimitedRequestAttempt.fromJson(data) as T;
     }
-    if (t == _i7.AnonymousAccountBlockedException) {
-      return _i7.AnonymousAccountBlockedException.fromJson(data) as T;
+    if (t == _i7.SecretChallenge) {
+      return _i7.SecretChallenge.fromJson(data) as T;
     }
-    if (t == _i8.AnonymousAccountBlockedExceptionReason) {
-      return _i8.AnonymousAccountBlockedExceptionReason.fromJson(data) as T;
+    if (t == _i8.AnonymousAccount) {
+      return _i8.AnonymousAccount.fromJson(data) as T;
     }
-    if (t == _i9.AppleAccount) {
-      return _i9.AppleAccount.fromJson(data) as T;
+    if (t == _i9.AnonymousAccountBlockedException) {
+      return _i9.AnonymousAccountBlockedException.fromJson(data) as T;
     }
-    if (t == _i10.EmailAccount) {
-      return _i10.EmailAccount.fromJson(data) as T;
+    if (t == _i10.AnonymousAccountBlockedExceptionReason) {
+      return _i10.AnonymousAccountBlockedExceptionReason.fromJson(data) as T;
     }
-    if (t == _i11.EmailAccountPasswordResetRequest) {
-      return _i11.EmailAccountPasswordResetRequest.fromJson(data) as T;
+    if (t == _i11.AppleAccount) {
+      return _i11.AppleAccount.fromJson(data) as T;
     }
-    if (t == _i12.EmailAccountRequest) {
-      return _i12.EmailAccountRequest.fromJson(data) as T;
+    if (t == _i12.EmailAccount) {
+      return _i12.EmailAccount.fromJson(data) as T;
     }
-    if (t == _i13.EmailAccountLoginException) {
-      return _i13.EmailAccountLoginException.fromJson(data) as T;
+    if (t == _i13.EmailAccountPasswordResetRequest) {
+      return _i13.EmailAccountPasswordResetRequest.fromJson(data) as T;
     }
-    if (t == _i14.EmailAccountLoginExceptionReason) {
-      return _i14.EmailAccountLoginExceptionReason.fromJson(data) as T;
+    if (t == _i14.EmailAccountRequest) {
+      return _i14.EmailAccountRequest.fromJson(data) as T;
     }
-    if (t == _i15.EmailAccountPasswordResetException) {
-      return _i15.EmailAccountPasswordResetException.fromJson(data) as T;
+    if (t == _i15.EmailAccountLoginException) {
+      return _i15.EmailAccountLoginException.fromJson(data) as T;
     }
-    if (t == _i16.EmailAccountPasswordResetExceptionReason) {
-      return _i16.EmailAccountPasswordResetExceptionReason.fromJson(data) as T;
+    if (t == _i16.EmailAccountLoginExceptionReason) {
+      return _i16.EmailAccountLoginExceptionReason.fromJson(data) as T;
     }
-    if (t == _i17.EmailAccountRequestException) {
-      return _i17.EmailAccountRequestException.fromJson(data) as T;
+    if (t == _i17.EmailAccountPasswordResetException) {
+      return _i17.EmailAccountPasswordResetException.fromJson(data) as T;
     }
-    if (t == _i18.EmailAccountRequestExceptionReason) {
-      return _i18.EmailAccountRequestExceptionReason.fromJson(data) as T;
+    if (t == _i18.EmailAccountPasswordResetExceptionReason) {
+      return _i18.EmailAccountPasswordResetExceptionReason.fromJson(data) as T;
     }
-    if (t == _i19.FacebookAccessTokenVerificationException) {
-      return _i19.FacebookAccessTokenVerificationException.fromJson(data) as T;
+    if (t == _i19.EmailAccountRequestException) {
+      return _i19.EmailAccountRequestException.fromJson(data) as T;
     }
-    if (t == _i20.FacebookAccount) {
-      return _i20.FacebookAccount.fromJson(data) as T;
+    if (t == _i20.EmailAccountRequestExceptionReason) {
+      return _i20.EmailAccountRequestExceptionReason.fromJson(data) as T;
     }
-    if (t == _i21.FirebaseAccount) {
-      return _i21.FirebaseAccount.fromJson(data) as T;
+    if (t == _i21.FacebookAccessTokenVerificationException) {
+      return _i21.FacebookAccessTokenVerificationException.fromJson(data) as T;
     }
-    if (t == _i22.FirebaseIdTokenVerificationException) {
-      return _i22.FirebaseIdTokenVerificationException.fromJson(data) as T;
+    if (t == _i22.FacebookAccount) {
+      return _i22.FacebookAccount.fromJson(data) as T;
     }
-    if (t == _i23.GitHubAccessTokenVerificationException) {
-      return _i23.GitHubAccessTokenVerificationException.fromJson(data) as T;
+    if (t == _i23.FirebaseAccount) {
+      return _i23.FirebaseAccount.fromJson(data) as T;
     }
-    if (t == _i24.GitHubAccount) {
-      return _i24.GitHubAccount.fromJson(data) as T;
+    if (t == _i24.FirebaseIdTokenVerificationException) {
+      return _i24.FirebaseIdTokenVerificationException.fromJson(data) as T;
     }
-    if (t == _i25.GoogleAccount) {
-      return _i25.GoogleAccount.fromJson(data) as T;
+    if (t == _i25.GitHubAccessTokenVerificationException) {
+      return _i25.GitHubAccessTokenVerificationException.fromJson(data) as T;
     }
-    if (t == _i26.GoogleIdTokenVerificationException) {
-      return _i26.GoogleIdTokenVerificationException.fromJson(data) as T;
+    if (t == _i26.GitHubAccount) {
+      return _i26.GitHubAccount.fromJson(data) as T;
     }
-    if (t == _i27.MicrosoftAccessTokenVerificationException) {
-      return _i27.MicrosoftAccessTokenVerificationException.fromJson(data) as T;
+    if (t == _i27.GoogleAccount) {
+      return _i27.GoogleAccount.fromJson(data) as T;
     }
-    if (t == _i28.MicrosoftAccount) {
-      return _i28.MicrosoftAccount.fromJson(data) as T;
+    if (t == _i28.GoogleIdTokenVerificationException) {
+      return _i28.GoogleIdTokenVerificationException.fromJson(data) as T;
     }
-    if (t == _i29.PasskeyAccount) {
-      return _i29.PasskeyAccount.fromJson(data) as T;
+    if (t == _i29.MicrosoftAccessTokenVerificationException) {
+      return _i29.MicrosoftAccessTokenVerificationException.fromJson(data) as T;
     }
-    if (t == _i30.PasskeyChallenge) {
-      return _i30.PasskeyChallenge.fromJson(data) as T;
+    if (t == _i30.MicrosoftAccount) {
+      return _i30.MicrosoftAccount.fromJson(data) as T;
     }
-    if (t == _i31.PasskeyChallengeExpiredException) {
-      return _i31.PasskeyChallengeExpiredException.fromJson(data) as T;
+    if (t == _i31.PasskeyAccount) {
+      return _i31.PasskeyAccount.fromJson(data) as T;
     }
-    if (t == _i32.PasskeyChallengeNotFoundException) {
-      return _i32.PasskeyChallengeNotFoundException.fromJson(data) as T;
+    if (t == _i32.PasskeyChallenge) {
+      return _i32.PasskeyChallenge.fromJson(data) as T;
     }
-    if (t == _i33.PasskeyLoginRequest) {
-      return _i33.PasskeyLoginRequest.fromJson(data) as T;
+    if (t == _i33.PasskeyChallengeExpiredException) {
+      return _i33.PasskeyChallengeExpiredException.fromJson(data) as T;
     }
-    if (t == _i34.PasskeyPublicKeyNotFoundException) {
-      return _i34.PasskeyPublicKeyNotFoundException.fromJson(data) as T;
+    if (t == _i34.PasskeyChallengeNotFoundException) {
+      return _i34.PasskeyChallengeNotFoundException.fromJson(data) as T;
     }
-    if (t == _i35.PasskeyRegistrationRequest) {
-      return _i35.PasskeyRegistrationRequest.fromJson(data) as T;
+    if (t == _i35.PasskeyLoginRequest) {
+      return _i35.PasskeyLoginRequest.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i4.RateLimitedRequestAttempt?>()) {
+    if (t == _i36.PasskeyPublicKeyNotFoundException) {
+      return _i36.PasskeyPublicKeyNotFoundException.fromJson(data) as T;
+    }
+    if (t == _i37.PasskeyRegistrationRequest) {
+      return _i37.PasskeyRegistrationRequest.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i4.AccountAlreadyLinkedException?>()) {
       return (data != null
-              ? _i4.RateLimitedRequestAttempt.fromJson(data)
+              ? _i4.AccountAlreadyLinkedException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i5.SecretChallenge?>()) {
-      return (data != null ? _i5.SecretChallenge.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i6.AnonymousAccount?>()) {
-      return (data != null ? _i6.AnonymousAccount.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i7.AnonymousAccountBlockedException?>()) {
+    if (t == _i1.getType<_i5.AccountMergeFailedException?>()) {
       return (data != null
-              ? _i7.AnonymousAccountBlockedException.fromJson(data)
+              ? _i5.AccountMergeFailedException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i8.AnonymousAccountBlockedExceptionReason?>()) {
+    if (t == _i1.getType<_i6.RateLimitedRequestAttempt?>()) {
       return (data != null
-              ? _i8.AnonymousAccountBlockedExceptionReason.fromJson(data)
+              ? _i6.RateLimitedRequestAttempt.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i9.AppleAccount?>()) {
-      return (data != null ? _i9.AppleAccount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.SecretChallenge?>()) {
+      return (data != null ? _i7.SecretChallenge.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.EmailAccount?>()) {
-      return (data != null ? _i10.EmailAccount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.AnonymousAccount?>()) {
+      return (data != null ? _i8.AnonymousAccount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i11.EmailAccountPasswordResetRequest?>()) {
+    if (t == _i1.getType<_i9.AnonymousAccountBlockedException?>()) {
       return (data != null
-              ? _i11.EmailAccountPasswordResetRequest.fromJson(data)
+              ? _i9.AnonymousAccountBlockedException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i12.EmailAccountRequest?>()) {
-      return (data != null ? _i12.EmailAccountRequest.fromJson(data) : null)
-          as T;
-    }
-    if (t == _i1.getType<_i13.EmailAccountLoginException?>()) {
+    if (t == _i1.getType<_i10.AnonymousAccountBlockedExceptionReason?>()) {
       return (data != null
-              ? _i13.EmailAccountLoginException.fromJson(data)
+              ? _i10.AnonymousAccountBlockedExceptionReason.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i14.EmailAccountLoginExceptionReason?>()) {
+    if (t == _i1.getType<_i11.AppleAccount?>()) {
+      return (data != null ? _i11.AppleAccount.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i12.EmailAccount?>()) {
+      return (data != null ? _i12.EmailAccount.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i13.EmailAccountPasswordResetRequest?>()) {
       return (data != null
-              ? _i14.EmailAccountLoginExceptionReason.fromJson(data)
+              ? _i13.EmailAccountPasswordResetRequest.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i15.EmailAccountPasswordResetException?>()) {
+    if (t == _i1.getType<_i14.EmailAccountRequest?>()) {
+      return (data != null ? _i14.EmailAccountRequest.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i15.EmailAccountLoginException?>()) {
       return (data != null
-              ? _i15.EmailAccountPasswordResetException.fromJson(data)
+              ? _i15.EmailAccountLoginException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i16.EmailAccountPasswordResetExceptionReason?>()) {
+    if (t == _i1.getType<_i16.EmailAccountLoginExceptionReason?>()) {
       return (data != null
-              ? _i16.EmailAccountPasswordResetExceptionReason.fromJson(data)
+              ? _i16.EmailAccountLoginExceptionReason.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i17.EmailAccountRequestException?>()) {
+    if (t == _i1.getType<_i17.EmailAccountPasswordResetException?>()) {
       return (data != null
-              ? _i17.EmailAccountRequestException.fromJson(data)
+              ? _i17.EmailAccountPasswordResetException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i18.EmailAccountRequestExceptionReason?>()) {
+    if (t == _i1.getType<_i18.EmailAccountPasswordResetExceptionReason?>()) {
       return (data != null
-              ? _i18.EmailAccountRequestExceptionReason.fromJson(data)
+              ? _i18.EmailAccountPasswordResetExceptionReason.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i19.FacebookAccessTokenVerificationException?>()) {
+    if (t == _i1.getType<_i19.EmailAccountRequestException?>()) {
       return (data != null
-              ? _i19.FacebookAccessTokenVerificationException.fromJson(data)
+              ? _i19.EmailAccountRequestException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i20.FacebookAccount?>()) {
-      return (data != null ? _i20.FacebookAccount.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i21.FirebaseAccount?>()) {
-      return (data != null ? _i21.FirebaseAccount.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i22.FirebaseIdTokenVerificationException?>()) {
+    if (t == _i1.getType<_i20.EmailAccountRequestExceptionReason?>()) {
       return (data != null
-              ? _i22.FirebaseIdTokenVerificationException.fromJson(data)
+              ? _i20.EmailAccountRequestExceptionReason.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i23.GitHubAccessTokenVerificationException?>()) {
+    if (t == _i1.getType<_i21.FacebookAccessTokenVerificationException?>()) {
       return (data != null
-              ? _i23.GitHubAccessTokenVerificationException.fromJson(data)
+              ? _i21.FacebookAccessTokenVerificationException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i24.GitHubAccount?>()) {
-      return (data != null ? _i24.GitHubAccount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i22.FacebookAccount?>()) {
+      return (data != null ? _i22.FacebookAccount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i25.GoogleAccount?>()) {
-      return (data != null ? _i25.GoogleAccount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i23.FirebaseAccount?>()) {
+      return (data != null ? _i23.FirebaseAccount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i26.GoogleIdTokenVerificationException?>()) {
+    if (t == _i1.getType<_i24.FirebaseIdTokenVerificationException?>()) {
       return (data != null
-              ? _i26.GoogleIdTokenVerificationException.fromJson(data)
+              ? _i24.FirebaseIdTokenVerificationException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i27.MicrosoftAccessTokenVerificationException?>()) {
+    if (t == _i1.getType<_i25.GitHubAccessTokenVerificationException?>()) {
       return (data != null
-              ? _i27.MicrosoftAccessTokenVerificationException.fromJson(data)
+              ? _i25.GitHubAccessTokenVerificationException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i28.MicrosoftAccount?>()) {
-      return (data != null ? _i28.MicrosoftAccount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i26.GitHubAccount?>()) {
+      return (data != null ? _i26.GitHubAccount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i29.PasskeyAccount?>()) {
-      return (data != null ? _i29.PasskeyAccount.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i27.GoogleAccount?>()) {
+      return (data != null ? _i27.GoogleAccount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i30.PasskeyChallenge?>()) {
-      return (data != null ? _i30.PasskeyChallenge.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i31.PasskeyChallengeExpiredException?>()) {
+    if (t == _i1.getType<_i28.GoogleIdTokenVerificationException?>()) {
       return (data != null
-              ? _i31.PasskeyChallengeExpiredException.fromJson(data)
+              ? _i28.GoogleIdTokenVerificationException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i32.PasskeyChallengeNotFoundException?>()) {
+    if (t == _i1.getType<_i29.MicrosoftAccessTokenVerificationException?>()) {
       return (data != null
-              ? _i32.PasskeyChallengeNotFoundException.fromJson(data)
+              ? _i29.MicrosoftAccessTokenVerificationException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i33.PasskeyLoginRequest?>()) {
-      return (data != null ? _i33.PasskeyLoginRequest.fromJson(data) : null)
-          as T;
+    if (t == _i1.getType<_i30.MicrosoftAccount?>()) {
+      return (data != null ? _i30.MicrosoftAccount.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i34.PasskeyPublicKeyNotFoundException?>()) {
+    if (t == _i1.getType<_i31.PasskeyAccount?>()) {
+      return (data != null ? _i31.PasskeyAccount.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i32.PasskeyChallenge?>()) {
+      return (data != null ? _i32.PasskeyChallenge.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i33.PasskeyChallengeExpiredException?>()) {
       return (data != null
-              ? _i34.PasskeyPublicKeyNotFoundException.fromJson(data)
+              ? _i33.PasskeyChallengeExpiredException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i35.PasskeyRegistrationRequest?>()) {
+    if (t == _i1.getType<_i34.PasskeyChallengeNotFoundException?>()) {
       return (data != null
-              ? _i35.PasskeyRegistrationRequest.fromJson(data)
+              ? _i34.PasskeyChallengeNotFoundException.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _i1.getType<_i35.PasskeyLoginRequest?>()) {
+      return (data != null ? _i35.PasskeyLoginRequest.fromJson(data) : null)
+          as T;
+    }
+    if (t == _i1.getType<_i36.PasskeyPublicKeyNotFoundException?>()) {
+      return (data != null
+              ? _i36.PasskeyPublicKeyNotFoundException.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _i1.getType<_i37.PasskeyRegistrationRequest?>()) {
+      return (data != null
+              ? _i37.PasskeyRegistrationRequest.fromJson(data)
               : null)
           as T;
     }
@@ -1543,9 +1565,9 @@ class Protocol extends _i1.SerializationManagerServer {
               : null)
           as T;
     }
-    if (t == _i1.getType<({_i36.ByteData challenge, _i1.UuidValue id})>()) {
+    if (t == _i1.getType<({_i38.ByteData challenge, _i1.UuidValue id})>()) {
       return (
-            challenge: deserialize<_i36.ByteData>(
+            challenge: deserialize<_i38.ByteData>(
               ((data as Map)['n'] as Map)['challenge'],
             ),
             id: deserialize<_i1.UuidValue>(data['n']['id']),
@@ -1563,53 +1585,55 @@ class Protocol extends _i1.SerializationManagerServer {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
-      _i4.RateLimitedRequestAttempt => 'RateLimitedRequestAttempt',
-      _i5.SecretChallenge => 'SecretChallenge',
-      _i6.AnonymousAccount => 'AnonymousAccount',
-      _i7.AnonymousAccountBlockedException =>
+      _i4.AccountAlreadyLinkedException => 'AccountAlreadyLinkedException',
+      _i5.AccountMergeFailedException => 'AccountMergeFailedException',
+      _i6.RateLimitedRequestAttempt => 'RateLimitedRequestAttempt',
+      _i7.SecretChallenge => 'SecretChallenge',
+      _i8.AnonymousAccount => 'AnonymousAccount',
+      _i9.AnonymousAccountBlockedException =>
         'AnonymousAccountBlockedException',
-      _i8.AnonymousAccountBlockedExceptionReason =>
+      _i10.AnonymousAccountBlockedExceptionReason =>
         'AnonymousAccountBlockedExceptionReason',
-      _i9.AppleAccount => 'AppleAccount',
-      _i10.EmailAccount => 'EmailAccount',
-      _i11.EmailAccountPasswordResetRequest =>
+      _i11.AppleAccount => 'AppleAccount',
+      _i12.EmailAccount => 'EmailAccount',
+      _i13.EmailAccountPasswordResetRequest =>
         'EmailAccountPasswordResetRequest',
-      _i12.EmailAccountRequest => 'EmailAccountRequest',
-      _i13.EmailAccountLoginException => 'EmailAccountLoginException',
-      _i14.EmailAccountLoginExceptionReason =>
+      _i14.EmailAccountRequest => 'EmailAccountRequest',
+      _i15.EmailAccountLoginException => 'EmailAccountLoginException',
+      _i16.EmailAccountLoginExceptionReason =>
         'EmailAccountLoginExceptionReason',
-      _i15.EmailAccountPasswordResetException =>
+      _i17.EmailAccountPasswordResetException =>
         'EmailAccountPasswordResetException',
-      _i16.EmailAccountPasswordResetExceptionReason =>
+      _i18.EmailAccountPasswordResetExceptionReason =>
         'EmailAccountPasswordResetExceptionReason',
-      _i17.EmailAccountRequestException => 'EmailAccountRequestException',
-      _i18.EmailAccountRequestExceptionReason =>
+      _i19.EmailAccountRequestException => 'EmailAccountRequestException',
+      _i20.EmailAccountRequestExceptionReason =>
         'EmailAccountRequestExceptionReason',
-      _i19.FacebookAccessTokenVerificationException =>
+      _i21.FacebookAccessTokenVerificationException =>
         'FacebookAccessTokenVerificationException',
-      _i20.FacebookAccount => 'FacebookAccount',
-      _i21.FirebaseAccount => 'FirebaseAccount',
-      _i22.FirebaseIdTokenVerificationException =>
+      _i22.FacebookAccount => 'FacebookAccount',
+      _i23.FirebaseAccount => 'FirebaseAccount',
+      _i24.FirebaseIdTokenVerificationException =>
         'FirebaseIdTokenVerificationException',
-      _i23.GitHubAccessTokenVerificationException =>
+      _i25.GitHubAccessTokenVerificationException =>
         'GitHubAccessTokenVerificationException',
-      _i24.GitHubAccount => 'GitHubAccount',
-      _i25.GoogleAccount => 'GoogleAccount',
-      _i26.GoogleIdTokenVerificationException =>
+      _i26.GitHubAccount => 'GitHubAccount',
+      _i27.GoogleAccount => 'GoogleAccount',
+      _i28.GoogleIdTokenVerificationException =>
         'GoogleIdTokenVerificationException',
-      _i27.MicrosoftAccessTokenVerificationException =>
+      _i29.MicrosoftAccessTokenVerificationException =>
         'MicrosoftAccessTokenVerificationException',
-      _i28.MicrosoftAccount => 'MicrosoftAccount',
-      _i29.PasskeyAccount => 'PasskeyAccount',
-      _i30.PasskeyChallenge => 'PasskeyChallenge',
-      _i31.PasskeyChallengeExpiredException =>
+      _i30.MicrosoftAccount => 'MicrosoftAccount',
+      _i31.PasskeyAccount => 'PasskeyAccount',
+      _i32.PasskeyChallenge => 'PasskeyChallenge',
+      _i33.PasskeyChallengeExpiredException =>
         'PasskeyChallengeExpiredException',
-      _i32.PasskeyChallengeNotFoundException =>
+      _i34.PasskeyChallengeNotFoundException =>
         'PasskeyChallengeNotFoundException',
-      _i33.PasskeyLoginRequest => 'PasskeyLoginRequest',
-      _i34.PasskeyPublicKeyNotFoundException =>
+      _i35.PasskeyLoginRequest => 'PasskeyLoginRequest',
+      _i36.PasskeyPublicKeyNotFoundException =>
         'PasskeyPublicKeyNotFoundException',
-      _i35.PasskeyRegistrationRequest => 'PasskeyRegistrationRequest',
+      _i37.PasskeyRegistrationRequest => 'PasskeyRegistrationRequest',
       _ => null,
     };
   }
@@ -1627,69 +1651,73 @@ class Protocol extends _i1.SerializationManagerServer {
     }
 
     switch (data) {
-      case _i4.RateLimitedRequestAttempt():
+      case _i4.AccountAlreadyLinkedException():
+        return 'AccountAlreadyLinkedException';
+      case _i5.AccountMergeFailedException():
+        return 'AccountMergeFailedException';
+      case _i6.RateLimitedRequestAttempt():
         return 'RateLimitedRequestAttempt';
-      case _i5.SecretChallenge():
+      case _i7.SecretChallenge():
         return 'SecretChallenge';
-      case _i6.AnonymousAccount():
+      case _i8.AnonymousAccount():
         return 'AnonymousAccount';
-      case _i7.AnonymousAccountBlockedException():
+      case _i9.AnonymousAccountBlockedException():
         return 'AnonymousAccountBlockedException';
-      case _i8.AnonymousAccountBlockedExceptionReason():
+      case _i10.AnonymousAccountBlockedExceptionReason():
         return 'AnonymousAccountBlockedExceptionReason';
-      case _i9.AppleAccount():
+      case _i11.AppleAccount():
         return 'AppleAccount';
-      case _i10.EmailAccount():
+      case _i12.EmailAccount():
         return 'EmailAccount';
-      case _i11.EmailAccountPasswordResetRequest():
+      case _i13.EmailAccountPasswordResetRequest():
         return 'EmailAccountPasswordResetRequest';
-      case _i12.EmailAccountRequest():
+      case _i14.EmailAccountRequest():
         return 'EmailAccountRequest';
-      case _i13.EmailAccountLoginException():
+      case _i15.EmailAccountLoginException():
         return 'EmailAccountLoginException';
-      case _i14.EmailAccountLoginExceptionReason():
+      case _i16.EmailAccountLoginExceptionReason():
         return 'EmailAccountLoginExceptionReason';
-      case _i15.EmailAccountPasswordResetException():
+      case _i17.EmailAccountPasswordResetException():
         return 'EmailAccountPasswordResetException';
-      case _i16.EmailAccountPasswordResetExceptionReason():
+      case _i18.EmailAccountPasswordResetExceptionReason():
         return 'EmailAccountPasswordResetExceptionReason';
-      case _i17.EmailAccountRequestException():
+      case _i19.EmailAccountRequestException():
         return 'EmailAccountRequestException';
-      case _i18.EmailAccountRequestExceptionReason():
+      case _i20.EmailAccountRequestExceptionReason():
         return 'EmailAccountRequestExceptionReason';
-      case _i19.FacebookAccessTokenVerificationException():
+      case _i21.FacebookAccessTokenVerificationException():
         return 'FacebookAccessTokenVerificationException';
-      case _i20.FacebookAccount():
+      case _i22.FacebookAccount():
         return 'FacebookAccount';
-      case _i21.FirebaseAccount():
+      case _i23.FirebaseAccount():
         return 'FirebaseAccount';
-      case _i22.FirebaseIdTokenVerificationException():
+      case _i24.FirebaseIdTokenVerificationException():
         return 'FirebaseIdTokenVerificationException';
-      case _i23.GitHubAccessTokenVerificationException():
+      case _i25.GitHubAccessTokenVerificationException():
         return 'GitHubAccessTokenVerificationException';
-      case _i24.GitHubAccount():
+      case _i26.GitHubAccount():
         return 'GitHubAccount';
-      case _i25.GoogleAccount():
+      case _i27.GoogleAccount():
         return 'GoogleAccount';
-      case _i26.GoogleIdTokenVerificationException():
+      case _i28.GoogleIdTokenVerificationException():
         return 'GoogleIdTokenVerificationException';
-      case _i27.MicrosoftAccessTokenVerificationException():
+      case _i29.MicrosoftAccessTokenVerificationException():
         return 'MicrosoftAccessTokenVerificationException';
-      case _i28.MicrosoftAccount():
+      case _i30.MicrosoftAccount():
         return 'MicrosoftAccount';
-      case _i29.PasskeyAccount():
+      case _i31.PasskeyAccount():
         return 'PasskeyAccount';
-      case _i30.PasskeyChallenge():
+      case _i32.PasskeyChallenge():
         return 'PasskeyChallenge';
-      case _i31.PasskeyChallengeExpiredException():
+      case _i33.PasskeyChallengeExpiredException():
         return 'PasskeyChallengeExpiredException';
-      case _i32.PasskeyChallengeNotFoundException():
+      case _i34.PasskeyChallengeNotFoundException():
         return 'PasskeyChallengeNotFoundException';
-      case _i33.PasskeyLoginRequest():
+      case _i35.PasskeyLoginRequest():
         return 'PasskeyLoginRequest';
-      case _i34.PasskeyPublicKeyNotFoundException():
+      case _i36.PasskeyPublicKeyNotFoundException():
         return 'PasskeyPublicKeyNotFoundException';
-      case _i35.PasskeyRegistrationRequest():
+      case _i37.PasskeyRegistrationRequest():
         return 'PasskeyRegistrationRequest';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1709,113 +1737,119 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'AccountAlreadyLinkedException') {
+      return deserialize<_i4.AccountAlreadyLinkedException>(data['data']);
+    }
+    if (dataClassName == 'AccountMergeFailedException') {
+      return deserialize<_i5.AccountMergeFailedException>(data['data']);
+    }
     if (dataClassName == 'RateLimitedRequestAttempt') {
-      return deserialize<_i4.RateLimitedRequestAttempt>(data['data']);
+      return deserialize<_i6.RateLimitedRequestAttempt>(data['data']);
     }
     if (dataClassName == 'SecretChallenge') {
-      return deserialize<_i5.SecretChallenge>(data['data']);
+      return deserialize<_i7.SecretChallenge>(data['data']);
     }
     if (dataClassName == 'AnonymousAccount') {
-      return deserialize<_i6.AnonymousAccount>(data['data']);
+      return deserialize<_i8.AnonymousAccount>(data['data']);
     }
     if (dataClassName == 'AnonymousAccountBlockedException') {
-      return deserialize<_i7.AnonymousAccountBlockedException>(data['data']);
+      return deserialize<_i9.AnonymousAccountBlockedException>(data['data']);
     }
     if (dataClassName == 'AnonymousAccountBlockedExceptionReason') {
-      return deserialize<_i8.AnonymousAccountBlockedExceptionReason>(
+      return deserialize<_i10.AnonymousAccountBlockedExceptionReason>(
         data['data'],
       );
     }
     if (dataClassName == 'AppleAccount') {
-      return deserialize<_i9.AppleAccount>(data['data']);
+      return deserialize<_i11.AppleAccount>(data['data']);
     }
     if (dataClassName == 'EmailAccount') {
-      return deserialize<_i10.EmailAccount>(data['data']);
+      return deserialize<_i12.EmailAccount>(data['data']);
     }
     if (dataClassName == 'EmailAccountPasswordResetRequest') {
-      return deserialize<_i11.EmailAccountPasswordResetRequest>(data['data']);
+      return deserialize<_i13.EmailAccountPasswordResetRequest>(data['data']);
     }
     if (dataClassName == 'EmailAccountRequest') {
-      return deserialize<_i12.EmailAccountRequest>(data['data']);
+      return deserialize<_i14.EmailAccountRequest>(data['data']);
     }
     if (dataClassName == 'EmailAccountLoginException') {
-      return deserialize<_i13.EmailAccountLoginException>(data['data']);
+      return deserialize<_i15.EmailAccountLoginException>(data['data']);
     }
     if (dataClassName == 'EmailAccountLoginExceptionReason') {
-      return deserialize<_i14.EmailAccountLoginExceptionReason>(data['data']);
+      return deserialize<_i16.EmailAccountLoginExceptionReason>(data['data']);
     }
     if (dataClassName == 'EmailAccountPasswordResetException') {
-      return deserialize<_i15.EmailAccountPasswordResetException>(data['data']);
+      return deserialize<_i17.EmailAccountPasswordResetException>(data['data']);
     }
     if (dataClassName == 'EmailAccountPasswordResetExceptionReason') {
-      return deserialize<_i16.EmailAccountPasswordResetExceptionReason>(
+      return deserialize<_i18.EmailAccountPasswordResetExceptionReason>(
         data['data'],
       );
     }
     if (dataClassName == 'EmailAccountRequestException') {
-      return deserialize<_i17.EmailAccountRequestException>(data['data']);
+      return deserialize<_i19.EmailAccountRequestException>(data['data']);
     }
     if (dataClassName == 'EmailAccountRequestExceptionReason') {
-      return deserialize<_i18.EmailAccountRequestExceptionReason>(data['data']);
+      return deserialize<_i20.EmailAccountRequestExceptionReason>(data['data']);
     }
     if (dataClassName == 'FacebookAccessTokenVerificationException') {
-      return deserialize<_i19.FacebookAccessTokenVerificationException>(
+      return deserialize<_i21.FacebookAccessTokenVerificationException>(
         data['data'],
       );
     }
     if (dataClassName == 'FacebookAccount') {
-      return deserialize<_i20.FacebookAccount>(data['data']);
+      return deserialize<_i22.FacebookAccount>(data['data']);
     }
     if (dataClassName == 'FirebaseAccount') {
-      return deserialize<_i21.FirebaseAccount>(data['data']);
+      return deserialize<_i23.FirebaseAccount>(data['data']);
     }
     if (dataClassName == 'FirebaseIdTokenVerificationException') {
-      return deserialize<_i22.FirebaseIdTokenVerificationException>(
+      return deserialize<_i24.FirebaseIdTokenVerificationException>(
         data['data'],
       );
     }
     if (dataClassName == 'GitHubAccessTokenVerificationException') {
-      return deserialize<_i23.GitHubAccessTokenVerificationException>(
+      return deserialize<_i25.GitHubAccessTokenVerificationException>(
         data['data'],
       );
     }
     if (dataClassName == 'GitHubAccount') {
-      return deserialize<_i24.GitHubAccount>(data['data']);
+      return deserialize<_i26.GitHubAccount>(data['data']);
     }
     if (dataClassName == 'GoogleAccount') {
-      return deserialize<_i25.GoogleAccount>(data['data']);
+      return deserialize<_i27.GoogleAccount>(data['data']);
     }
     if (dataClassName == 'GoogleIdTokenVerificationException') {
-      return deserialize<_i26.GoogleIdTokenVerificationException>(data['data']);
+      return deserialize<_i28.GoogleIdTokenVerificationException>(data['data']);
     }
     if (dataClassName == 'MicrosoftAccessTokenVerificationException') {
-      return deserialize<_i27.MicrosoftAccessTokenVerificationException>(
+      return deserialize<_i29.MicrosoftAccessTokenVerificationException>(
         data['data'],
       );
     }
     if (dataClassName == 'MicrosoftAccount') {
-      return deserialize<_i28.MicrosoftAccount>(data['data']);
+      return deserialize<_i30.MicrosoftAccount>(data['data']);
     }
     if (dataClassName == 'PasskeyAccount') {
-      return deserialize<_i29.PasskeyAccount>(data['data']);
+      return deserialize<_i31.PasskeyAccount>(data['data']);
     }
     if (dataClassName == 'PasskeyChallenge') {
-      return deserialize<_i30.PasskeyChallenge>(data['data']);
+      return deserialize<_i32.PasskeyChallenge>(data['data']);
     }
     if (dataClassName == 'PasskeyChallengeExpiredException') {
-      return deserialize<_i31.PasskeyChallengeExpiredException>(data['data']);
+      return deserialize<_i33.PasskeyChallengeExpiredException>(data['data']);
     }
     if (dataClassName == 'PasskeyChallengeNotFoundException') {
-      return deserialize<_i32.PasskeyChallengeNotFoundException>(data['data']);
+      return deserialize<_i34.PasskeyChallengeNotFoundException>(data['data']);
     }
     if (dataClassName == 'PasskeyLoginRequest') {
-      return deserialize<_i33.PasskeyLoginRequest>(data['data']);
+      return deserialize<_i35.PasskeyLoginRequest>(data['data']);
     }
     if (dataClassName == 'PasskeyPublicKeyNotFoundException') {
-      return deserialize<_i34.PasskeyPublicKeyNotFoundException>(data['data']);
+      return deserialize<_i36.PasskeyPublicKeyNotFoundException>(data['data']);
     }
     if (dataClassName == 'PasskeyRegistrationRequest') {
-      return deserialize<_i35.PasskeyRegistrationRequest>(data['data']);
+      return deserialize<_i37.PasskeyRegistrationRequest>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1843,34 +1877,34 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i4.RateLimitedRequestAttempt:
-        return _i4.RateLimitedRequestAttempt.t;
-      case _i5.SecretChallenge:
-        return _i5.SecretChallenge.t;
-      case _i6.AnonymousAccount:
-        return _i6.AnonymousAccount.t;
-      case _i9.AppleAccount:
-        return _i9.AppleAccount.t;
-      case _i10.EmailAccount:
-        return _i10.EmailAccount.t;
-      case _i11.EmailAccountPasswordResetRequest:
-        return _i11.EmailAccountPasswordResetRequest.t;
-      case _i12.EmailAccountRequest:
-        return _i12.EmailAccountRequest.t;
-      case _i20.FacebookAccount:
-        return _i20.FacebookAccount.t;
-      case _i21.FirebaseAccount:
-        return _i21.FirebaseAccount.t;
-      case _i24.GitHubAccount:
-        return _i24.GitHubAccount.t;
-      case _i25.GoogleAccount:
-        return _i25.GoogleAccount.t;
-      case _i28.MicrosoftAccount:
-        return _i28.MicrosoftAccount.t;
-      case _i29.PasskeyAccount:
-        return _i29.PasskeyAccount.t;
-      case _i30.PasskeyChallenge:
-        return _i30.PasskeyChallenge.t;
+      case _i6.RateLimitedRequestAttempt:
+        return _i6.RateLimitedRequestAttempt.t;
+      case _i7.SecretChallenge:
+        return _i7.SecretChallenge.t;
+      case _i8.AnonymousAccount:
+        return _i8.AnonymousAccount.t;
+      case _i11.AppleAccount:
+        return _i11.AppleAccount.t;
+      case _i12.EmailAccount:
+        return _i12.EmailAccount.t;
+      case _i13.EmailAccountPasswordResetRequest:
+        return _i13.EmailAccountPasswordResetRequest.t;
+      case _i14.EmailAccountRequest:
+        return _i14.EmailAccountRequest.t;
+      case _i22.FacebookAccount:
+        return _i22.FacebookAccount.t;
+      case _i23.FirebaseAccount:
+        return _i23.FirebaseAccount.t;
+      case _i26.GitHubAccount:
+        return _i26.GitHubAccount.t;
+      case _i27.GoogleAccount:
+        return _i27.GoogleAccount.t;
+      case _i30.MicrosoftAccount:
+        return _i30.MicrosoftAccount.t;
+      case _i31.PasskeyAccount:
+        return _i31.PasskeyAccount.t;
+      case _i32.PasskeyChallenge:
+        return _i32.PasskeyChallenge.t;
     }
     return null;
   }
@@ -1891,7 +1925,7 @@ class Protocol extends _i1.SerializationManagerServer {
     if (record == null) {
       return null;
     }
-    if (record is ({_i36.ByteData challenge, _i1.UuidValue id})) {
+    if (record is ({_i38.ByteData challenge, _i1.UuidValue id})) {
       return {
         "n": {
           "challenge": record.challenge,

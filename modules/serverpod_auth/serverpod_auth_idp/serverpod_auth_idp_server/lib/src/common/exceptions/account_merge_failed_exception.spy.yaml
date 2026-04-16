@@ -1,0 +1,6 @@
+### Exception thrown when attempting to merge accounts and the merge fails.
+exception: AccountMergeFailedException
+fields:
+  userToKeepId: UuidValue
+  userToRemoveId: UuidValue
+
