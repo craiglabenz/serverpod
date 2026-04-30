@@ -1,0 +1,28 @@
+### Core database entity representing a request to merge two user accounts in
+### the authentication system.
+###
+### This class is meant to be used only to interact with the database. To transfer
+### user data, use the [AuthUserMergeRequestModel] DTO.
+class: AuthUserMergeRequest
+table: serverpod_auth_core_user_merge_request
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+
+  ### The account which will receive another account's data.
+  userToKeepId: UuidValue
+
+  ### The account which will be merged into another account. This account will
+  ### be deleted after the merge.
+  userToRemoveId: UuidValue
+
+  ### Whether the merge request has been accepted. Starts as `false` and is set
+  ### to `true` when the user accepts the merge request. Rejection of the merge
+  ### request is not explicitly stored.
+  accepted: bool, defaultModel=false
+
+    ### The time when this merge request was accepted. If this value is null, the
+  ### user has yet to accept the request. (They may not ever accept it).
+  acceptedAt: DateTime?
+
+  ### The time when this merge request was created.
+  createdAt: DateTime, defaultModel=now

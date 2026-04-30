@@ -1,0 +1,23 @@
+### DTO for transferring authentication user merge request information.
+class: AuthUserMergeRequestModel
+fields:
+  id: UuidValue
+
+  ### The account which will receive another account's data.
+  userToKeepId: UuidValue
+
+  ### The account which will be merged into another account. This account will
+  ### be deleted after the merge.
+  userToRemoveId: UuidValue
+
+  ### Whether the merge request has been accepted. Starts as `false` and is set
+  ### to `true` when the user accepts the merge request. Rejection of the merge
+  ### request is not explicitly stored.
+  accepted: bool
+
+  ### The time when this merge request was accepted. If this value is null, the
+  ### user has yet to accept the request. (They may not ever accept it).
+  acceptedAt: DateTime?
+
+  ### The time when this merge request was created.
+  createdAt: DateTime
