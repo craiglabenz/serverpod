@@ -367,6 +367,8 @@ class GoogleAccountRepository {
     _i1.OrderByListBuilder<GoogleAccountTable>? orderByList,
     _i1.Transaction? transaction,
     GoogleAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<GoogleAccount>(
       where: where?.call(GoogleAccount.t),
@@ -378,6 +380,8 @@ class GoogleAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -408,6 +412,8 @@ class GoogleAccountRepository {
     _i1.OrderByListBuilder<GoogleAccountTable>? orderByList,
     _i1.Transaction? transaction,
     GoogleAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<GoogleAccount>(
       where: where?.call(GoogleAccount.t),
@@ -418,6 +424,8 @@ class GoogleAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -427,11 +435,15 @@ class GoogleAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     GoogleAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<GoogleAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

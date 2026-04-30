@@ -396,6 +396,8 @@ class FirebaseAccountRepository {
     _i1.OrderByListBuilder<FirebaseAccountTable>? orderByList,
     _i1.Transaction? transaction,
     FirebaseAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<FirebaseAccount>(
       where: where?.call(FirebaseAccount.t),
@@ -407,6 +409,8 @@ class FirebaseAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -437,6 +441,8 @@ class FirebaseAccountRepository {
     _i1.OrderByListBuilder<FirebaseAccountTable>? orderByList,
     _i1.Transaction? transaction,
     FirebaseAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<FirebaseAccount>(
       where: where?.call(FirebaseAccount.t),
@@ -447,6 +453,8 @@ class FirebaseAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -456,11 +464,15 @@ class FirebaseAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     FirebaseAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<FirebaseAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

@@ -371,6 +371,8 @@ class GitHubAccountRepository {
     _i1.OrderByListBuilder<GitHubAccountTable>? orderByList,
     _i1.Transaction? transaction,
     GitHubAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<GitHubAccount>(
       where: where?.call(GitHubAccount.t),
@@ -382,6 +384,8 @@ class GitHubAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -412,6 +416,8 @@ class GitHubAccountRepository {
     _i1.OrderByListBuilder<GitHubAccountTable>? orderByList,
     _i1.Transaction? transaction,
     GitHubAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<GitHubAccount>(
       where: where?.call(GitHubAccount.t),
@@ -422,6 +428,8 @@ class GitHubAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -431,11 +439,15 @@ class GitHubAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     GitHubAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<GitHubAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

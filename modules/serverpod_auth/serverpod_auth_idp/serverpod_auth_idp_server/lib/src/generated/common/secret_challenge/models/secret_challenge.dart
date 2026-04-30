@@ -229,6 +229,8 @@ class SecretChallengeRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SecretChallengeTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<SecretChallenge>(
       where: where?.call(SecretChallenge.t),
@@ -239,6 +241,8 @@ class SecretChallengeRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -268,6 +272,8 @@ class SecretChallengeRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<SecretChallengeTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<SecretChallenge>(
       where: where?.call(SecretChallenge.t),
@@ -277,6 +283,8 @@ class SecretChallengeRepository {
           orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -285,10 +293,14 @@ class SecretChallengeRepository {
     _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<SecretChallenge>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

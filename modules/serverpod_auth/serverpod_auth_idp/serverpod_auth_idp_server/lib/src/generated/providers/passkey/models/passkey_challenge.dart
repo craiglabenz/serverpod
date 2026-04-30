@@ -256,6 +256,8 @@ class PasskeyChallengeRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<PasskeyChallengeTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<PasskeyChallenge>(
       where: where?.call(PasskeyChallenge.t),
@@ -266,6 +268,8 @@ class PasskeyChallengeRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -295,6 +299,8 @@ class PasskeyChallengeRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<PasskeyChallengeTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<PasskeyChallenge>(
       where: where?.call(PasskeyChallenge.t),
@@ -304,6 +310,8 @@ class PasskeyChallengeRepository {
           orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -312,10 +320,14 @@ class PasskeyChallengeRepository {
     _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<PasskeyChallenge>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

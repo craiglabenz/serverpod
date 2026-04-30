@@ -382,6 +382,8 @@ class RateLimitedRequestAttemptRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RateLimitedRequestAttemptTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<RateLimitedRequestAttempt>(
       where: where?.call(RateLimitedRequestAttempt.t),
@@ -392,6 +394,8 @@ class RateLimitedRequestAttemptRepository {
       limit: limit,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -421,6 +425,8 @@ class RateLimitedRequestAttemptRepository {
     bool orderDescending = false,
     _i1.OrderByListBuilder<RateLimitedRequestAttemptTable>? orderByList,
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<RateLimitedRequestAttempt>(
       where: where?.call(RateLimitedRequestAttempt.t),
@@ -430,6 +436,8 @@ class RateLimitedRequestAttemptRepository {
           orderDescending,
       offset: offset,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -438,10 +446,14 @@ class RateLimitedRequestAttemptRepository {
     _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<RateLimitedRequestAttempt>(
       id,
       transaction: transaction,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

@@ -364,6 +364,8 @@ class EmailAccountRepository {
     _i1.OrderByListBuilder<EmailAccountTable>? orderByList,
     _i1.Transaction? transaction,
     EmailAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<EmailAccount>(
       where: where?.call(EmailAccount.t),
@@ -375,6 +377,8 @@ class EmailAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -405,6 +409,8 @@ class EmailAccountRepository {
     _i1.OrderByListBuilder<EmailAccountTable>? orderByList,
     _i1.Transaction? transaction,
     EmailAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<EmailAccount>(
       where: where?.call(EmailAccount.t),
@@ -415,6 +421,8 @@ class EmailAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -424,11 +432,15 @@ class EmailAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     EmailAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<EmailAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

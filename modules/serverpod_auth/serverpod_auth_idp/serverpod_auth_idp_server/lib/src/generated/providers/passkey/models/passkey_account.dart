@@ -445,6 +445,8 @@ class PasskeyAccountRepository {
     _i1.OrderByListBuilder<PasskeyAccountTable>? orderByList,
     _i1.Transaction? transaction,
     PasskeyAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<PasskeyAccount>(
       where: where?.call(PasskeyAccount.t),
@@ -456,6 +458,8 @@ class PasskeyAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -486,6 +490,8 @@ class PasskeyAccountRepository {
     _i1.OrderByListBuilder<PasskeyAccountTable>? orderByList,
     _i1.Transaction? transaction,
     PasskeyAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<PasskeyAccount>(
       where: where?.call(PasskeyAccount.t),
@@ -496,6 +502,8 @@ class PasskeyAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -505,11 +513,15 @@ class PasskeyAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     PasskeyAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<PasskeyAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

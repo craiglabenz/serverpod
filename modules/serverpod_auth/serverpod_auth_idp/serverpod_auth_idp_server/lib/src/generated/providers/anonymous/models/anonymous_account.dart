@@ -309,6 +309,8 @@ class AnonymousAccountRepository {
     _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     _i1.Transaction? transaction,
     AnonymousAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<AnonymousAccount>(
       where: where?.call(AnonymousAccount.t),
@@ -320,6 +322,8 @@ class AnonymousAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -350,6 +354,8 @@ class AnonymousAccountRepository {
     _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     _i1.Transaction? transaction,
     AnonymousAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<AnonymousAccount>(
       where: where?.call(AnonymousAccount.t),
@@ -360,6 +366,8 @@ class AnonymousAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -369,11 +377,15 @@ class AnonymousAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     AnonymousAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<AnonymousAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

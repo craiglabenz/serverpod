@@ -476,6 +476,8 @@ class EmailAccountPasswordResetRequestRepository {
     _i1.OrderByListBuilder<EmailAccountPasswordResetRequestTable>? orderByList,
     _i1.Transaction? transaction,
     EmailAccountPasswordResetRequestInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<EmailAccountPasswordResetRequest>(
       where: where?.call(EmailAccountPasswordResetRequest.t),
@@ -487,6 +489,8 @@ class EmailAccountPasswordResetRequestRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -517,6 +521,8 @@ class EmailAccountPasswordResetRequestRepository {
     _i1.OrderByListBuilder<EmailAccountPasswordResetRequestTable>? orderByList,
     _i1.Transaction? transaction,
     EmailAccountPasswordResetRequestInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<EmailAccountPasswordResetRequest>(
       where: where?.call(EmailAccountPasswordResetRequest.t),
@@ -527,6 +533,8 @@ class EmailAccountPasswordResetRequestRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -536,11 +544,15 @@ class EmailAccountPasswordResetRequestRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     EmailAccountPasswordResetRequestInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<EmailAccountPasswordResetRequest>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 

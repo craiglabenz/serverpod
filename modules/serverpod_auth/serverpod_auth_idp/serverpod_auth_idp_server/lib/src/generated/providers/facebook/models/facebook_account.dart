@@ -450,6 +450,8 @@ class FacebookAccountRepository {
     _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     _i1.Transaction? transaction,
     FacebookAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.find<FacebookAccount>(
       where: where?.call(FacebookAccount.t),
@@ -461,6 +463,8 @@ class FacebookAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -491,6 +495,8 @@ class FacebookAccountRepository {
     _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     _i1.Transaction? transaction,
     FacebookAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findFirstRow<FacebookAccount>(
       where: where?.call(FacebookAccount.t),
@@ -501,6 +507,8 @@ class FacebookAccountRepository {
       offset: offset,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
@@ -510,11 +518,15 @@ class FacebookAccountRepository {
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     FacebookAccountInclude? include,
+    _i1.LockMode? lockMode,
+    _i1.LockBehavior? lockBehavior,
   }) async {
     return session.db.findById<FacebookAccount>(
       id,
       transaction: transaction,
       include: include,
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
     );
   }
 
