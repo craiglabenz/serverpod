@@ -99,6 +99,7 @@ abstract class EmailReset
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EmailResetTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmailResetTable>? orderByList,
     EmailResetInclude? include,
@@ -108,7 +109,8 @@ abstract class EmailReset
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(EmailReset.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(EmailReset.t),
       include: include,
     );
@@ -229,6 +231,7 @@ class EmailResetIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -269,11 +272,12 @@ class EmailResetRepository {
   /// );
   /// ```
   Future<List<EmailReset>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmailResetTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EmailResetTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmailResetTable>? orderByList,
     _i1.Transaction? transaction,
@@ -284,7 +288,8 @@ class EmailResetRepository {
       where: where?.call(EmailReset.t),
       orderBy: orderBy?.call(EmailReset.t),
       orderByList: orderByList?.call(EmailReset.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -311,10 +316,11 @@ class EmailResetRepository {
   /// );
   /// ```
   Future<EmailReset?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmailResetTable>? where,
     int? offset,
     _i1.OrderByBuilder<EmailResetTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmailResetTable>? orderByList,
     _i1.Transaction? transaction,
@@ -325,7 +331,8 @@ class EmailResetRepository {
       where: where?.call(EmailReset.t),
       orderBy: orderBy?.call(EmailReset.t),
       orderByList: orderByList?.call(EmailReset.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       lockMode: lockMode,
@@ -335,7 +342,7 @@ class EmailResetRepository {
 
   /// Finds a single [EmailReset] by its [id] or null if no such row exists.
   Future<EmailReset?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
     _i1.LockMode? lockMode,
@@ -355,14 +362,20 @@ class EmailResetRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<EmailReset>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EmailReset> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<EmailReset>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -370,7 +383,7 @@ class EmailResetRepository {
   ///
   /// The returned [EmailReset] will have its `id` field set.
   Future<EmailReset> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailReset row, {
     _i1.Transaction? transaction,
   }) async {
@@ -386,7 +399,7 @@ class EmailResetRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<EmailReset>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EmailReset> rows, {
     _i1.ColumnSelections<EmailResetTable>? columns,
     _i1.Transaction? transaction,
@@ -402,7 +415,7 @@ class EmailResetRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<EmailReset> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailReset row, {
     _i1.ColumnSelections<EmailResetTable>? columns,
     _i1.Transaction? transaction,
@@ -417,7 +430,7 @@ class EmailResetRepository {
   /// Updates a single [EmailReset] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<EmailReset?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<EmailResetUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -432,13 +445,14 @@ class EmailResetRepository {
   /// Updates all [EmailReset]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<EmailReset>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<EmailResetUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<EmailResetTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EmailResetTable>? orderBy,
     _i1.OrderByListBuilder<EmailResetTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -449,28 +463,41 @@ class EmailResetRepository {
       offset: offset,
       orderBy: orderBy?.call(EmailReset.t),
       orderByList: orderByList?.call(EmailReset.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [EmailReset]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<EmailReset>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EmailReset> rows, {
+    _i1.OrderByBuilder<EmailResetTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<EmailResetTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<EmailReset>(
       rows,
+      orderBy: orderBy?.call(EmailReset.t),
+      orderByList: orderByList?.call(EmailReset.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [EmailReset].
   Future<EmailReset> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailReset row, {
     _i1.Transaction? transaction,
   }) async {
@@ -481,13 +508,24 @@ class EmailResetRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<EmailReset>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<EmailResetTable> where,
+    _i1.OrderByBuilder<EmailResetTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<EmailResetTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<EmailReset>(
       where: where(EmailReset.t),
+      orderBy: orderBy?.call(EmailReset.t),
+      orderByList: orderByList?.call(EmailReset.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -495,7 +533,7 @@ class EmailResetRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmailResetTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -509,7 +547,7 @@ class EmailResetRepository {
 
   /// Acquires row-level locks on [EmailReset] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<EmailResetTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,

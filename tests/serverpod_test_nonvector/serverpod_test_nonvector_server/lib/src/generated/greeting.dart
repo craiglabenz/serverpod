@@ -99,6 +99,7 @@ abstract class Greeting
     int? limit,
     int? offset,
     _i1.OrderByBuilder<GreetingTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<GreetingTable>? orderByList,
     GreetingInclude? include,
@@ -108,7 +109,8 @@ abstract class Greeting
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(Greeting.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(Greeting.t),
       include: include,
     );
@@ -227,6 +229,7 @@ class GreetingIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -267,11 +270,12 @@ class GreetingRepository {
   /// );
   /// ```
   Future<List<Greeting>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<GreetingTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<GreetingTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<GreetingTable>? orderByList,
     _i1.Transaction? transaction,
@@ -282,7 +286,8 @@ class GreetingRepository {
       where: where?.call(Greeting.t),
       orderBy: orderBy?.call(Greeting.t),
       orderByList: orderByList?.call(Greeting.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -309,10 +314,11 @@ class GreetingRepository {
   /// );
   /// ```
   Future<Greeting?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<GreetingTable>? where,
     int? offset,
     _i1.OrderByBuilder<GreetingTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<GreetingTable>? orderByList,
     _i1.Transaction? transaction,
@@ -323,7 +329,8 @@ class GreetingRepository {
       where: where?.call(Greeting.t),
       orderBy: orderBy?.call(Greeting.t),
       orderByList: orderByList?.call(Greeting.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       lockMode: lockMode,
@@ -333,7 +340,7 @@ class GreetingRepository {
 
   /// Finds a single [Greeting] by its [id] or null if no such row exists.
   Future<Greeting?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
     _i1.LockMode? lockMode,
@@ -353,14 +360,20 @@ class GreetingRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<Greeting>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Greeting> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<Greeting>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -368,7 +381,7 @@ class GreetingRepository {
   ///
   /// The returned [Greeting] will have its `id` field set.
   Future<Greeting> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Greeting row, {
     _i1.Transaction? transaction,
   }) async {
@@ -384,7 +397,7 @@ class GreetingRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<Greeting>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Greeting> rows, {
     _i1.ColumnSelections<GreetingTable>? columns,
     _i1.Transaction? transaction,
@@ -400,7 +413,7 @@ class GreetingRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<Greeting> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Greeting row, {
     _i1.ColumnSelections<GreetingTable>? columns,
     _i1.Transaction? transaction,
@@ -415,7 +428,7 @@ class GreetingRepository {
   /// Updates a single [Greeting] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<Greeting?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<GreetingUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -430,13 +443,14 @@ class GreetingRepository {
   /// Updates all [Greeting]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<Greeting>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<GreetingUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<GreetingTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<GreetingTable>? orderBy,
     _i1.OrderByListBuilder<GreetingTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -447,28 +461,41 @@ class GreetingRepository {
       offset: offset,
       orderBy: orderBy?.call(Greeting.t),
       orderByList: orderByList?.call(Greeting.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [Greeting]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<Greeting>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<Greeting> rows, {
+    _i1.OrderByBuilder<GreetingTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<GreetingTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<Greeting>(
       rows,
+      orderBy: orderBy?.call(Greeting.t),
+      orderByList: orderByList?.call(Greeting.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [Greeting].
   Future<Greeting> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     Greeting row, {
     _i1.Transaction? transaction,
   }) async {
@@ -479,13 +506,24 @@ class GreetingRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<Greeting>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<GreetingTable> where,
+    _i1.OrderByBuilder<GreetingTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<GreetingTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<Greeting>(
       where: where(Greeting.t),
+      orderBy: orderBy?.call(Greeting.t),
+      orderByList: orderByList?.call(Greeting.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -493,7 +531,7 @@ class GreetingRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<GreetingTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -507,7 +545,7 @@ class GreetingRepository {
 
   /// Acquires row-level locks on [Greeting] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<GreetingTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,

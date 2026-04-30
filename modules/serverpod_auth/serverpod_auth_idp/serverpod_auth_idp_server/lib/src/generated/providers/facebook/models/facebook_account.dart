@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -153,6 +153,7 @@ abstract class FacebookAccount
     int? limit,
     int? offset,
     _i1.OrderByBuilder<FacebookAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     FacebookAccountInclude? include,
@@ -162,7 +163,8 @@ abstract class FacebookAccount
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(FacebookAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(FacebookAccount.t),
       include: include,
     );
@@ -395,6 +397,7 @@ class FacebookAccountIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -437,11 +440,12 @@ class FacebookAccountRepository {
   /// );
   /// ```
   Future<List<FacebookAccount>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FacebookAccountTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<FacebookAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     _i1.Transaction? transaction,
@@ -451,7 +455,8 @@ class FacebookAccountRepository {
       where: where?.call(FacebookAccount.t),
       orderBy: orderBy?.call(FacebookAccount.t),
       orderByList: orderByList?.call(FacebookAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -477,10 +482,11 @@ class FacebookAccountRepository {
   /// );
   /// ```
   Future<FacebookAccount?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FacebookAccountTable>? where,
     int? offset,
     _i1.OrderByBuilder<FacebookAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     _i1.Transaction? transaction,
@@ -490,7 +496,8 @@ class FacebookAccountRepository {
       where: where?.call(FacebookAccount.t),
       orderBy: orderBy?.call(FacebookAccount.t),
       orderByList: orderByList?.call(FacebookAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -499,7 +506,7 @@ class FacebookAccountRepository {
 
   /// Finds a single [FacebookAccount] by its [id] or null if no such row exists.
   Future<FacebookAccount?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     FacebookAccountInclude? include,
@@ -517,14 +524,20 @@ class FacebookAccountRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<FacebookAccount>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FacebookAccount> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<FacebookAccount>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -532,7 +545,7 @@ class FacebookAccountRepository {
   ///
   /// The returned [FacebookAccount] will have its `id` field set.
   Future<FacebookAccount> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FacebookAccount row, {
     _i1.Transaction? transaction,
   }) async {
@@ -548,7 +561,7 @@ class FacebookAccountRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<FacebookAccount>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FacebookAccount> rows, {
     _i1.ColumnSelections<FacebookAccountTable>? columns,
     _i1.Transaction? transaction,
@@ -564,7 +577,7 @@ class FacebookAccountRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<FacebookAccount> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FacebookAccount row, {
     _i1.ColumnSelections<FacebookAccountTable>? columns,
     _i1.Transaction? transaction,
@@ -579,7 +592,7 @@ class FacebookAccountRepository {
   /// Updates a single [FacebookAccount] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<FacebookAccount?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<FacebookAccountUpdateTable>
     columnValues,
@@ -595,7 +608,7 @@ class FacebookAccountRepository {
   /// Updates all [FacebookAccount]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<FacebookAccount>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<FacebookAccountUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<FacebookAccountTable> where,
@@ -603,6 +616,7 @@ class FacebookAccountRepository {
     int? offset,
     _i1.OrderByBuilder<FacebookAccountTable>? orderBy,
     _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -613,28 +627,41 @@ class FacebookAccountRepository {
       offset: offset,
       orderBy: orderBy?.call(FacebookAccount.t),
       orderByList: orderByList?.call(FacebookAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [FacebookAccount]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<FacebookAccount>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<FacebookAccount> rows, {
+    _i1.OrderByBuilder<FacebookAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<FacebookAccount>(
       rows,
+      orderBy: orderBy?.call(FacebookAccount.t),
+      orderByList: orderByList?.call(FacebookAccount.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [FacebookAccount].
   Future<FacebookAccount> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FacebookAccount row, {
     _i1.Transaction? transaction,
   }) async {
@@ -645,13 +672,24 @@ class FacebookAccountRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<FacebookAccount>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<FacebookAccountTable> where,
+    _i1.OrderByBuilder<FacebookAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<FacebookAccountTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<FacebookAccount>(
       where: where(FacebookAccount.t),
+      orderBy: orderBy?.call(FacebookAccount.t),
+      orderByList: orderByList?.call(FacebookAccount.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -659,7 +697,7 @@ class FacebookAccountRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<FacebookAccountTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -667,6 +705,22 @@ class FacebookAccountRepository {
     return session.db.count<FacebookAccount>(
       where: where?.call(FacebookAccount.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [FacebookAccount] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<FacebookAccountTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<FacebookAccount>(
+      where: where(FacebookAccount.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -678,7 +732,7 @@ class FacebookAccountAttachRowRepository {
   /// Creates a relation between the given [FacebookAccount] and [AuthUser]
   /// by setting the [FacebookAccount]'s foreign key `authUserId` to refer to the [AuthUser].
   Future<void> authUser(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     FacebookAccount facebookAccount,
     _i2.AuthUser authUser, {
     _i1.Transaction? transaction,

@@ -1,3 +1,129 @@
+## 3.5.0-beta.4
+
+- feat(EXPERIMENTAL): Adds `nocterm` based TUI to `serverpod start` command.
+- feat(EXPERIMENTAL): Implements SQLite database support.
+- feat: Adds dedicated support for recurring future calls.
+- feat: Allows overriding a `column` name on models, with proper migration support.
+- feat: Exposes a `unique` keyword on models for simplified creation of unique indexes.
+- feat: Exposes datetime filter parameters on Insights endpoints.
+- feat: Adds supports for `serverpod create .` call in the current directory.
+- feat: Adds support for `orderBy` and `orderByList` in `delete` and `deleteWhere` methods ([@henycave](https://github.com/henycave)).
+- feat: Adds `HmacSha256` JWT algorithm on the auth core package.
+- feat: Introduces `asc()` / `desc()` convenience methods on orderable columns.
+- fix: Deprecates the manual creation of `Order` objects in favor of the new `asc()` / `desc()` methods.
+- fix: Adds missing `onRefreshTokenCreated` to `JwtConfigFromPasswords` constructor.
+- perf: Optimizes Insights queries 60x by using object relations and improved indexes.
+- chore: Adds `.gitignore` to the top-level directory on new projects to ignore `.dart_tool`.
+
+## 3.5.0-beta.3
+
+- feat(EXPERIMENTAL): Adds MCP server to the serverpod CLI with `apply_migrations` tool.
+- feat: Ensures at-least-once semantics for future calls execution.
+- feat: Allows configuring localization for the sign in widgets. ([@justlunix](https://github.com/justlunix))
+- feat: Adds `onAfterAccountCreated` callbacks to all IDPs for custom post-account creation logic. ([@kamil-matula](https://github.com/kamil-matula))
+- fix: Fixes future calls generation if models were not previously available on the project (like when running with a clean `generated` folder).
+
+## 3.5.0-beta.2
+
+- fix: Fixes time spinners not updating correctly when running the `generate` or `start` commands.
+- fix: Ensures docker compose down is run on early Ctrl-C to abort the `start --watch` command.
+- fix: Fixes incremental compiler missing changes to the generated `.dart` files when running commands in watch mode.
+
+## 3.5.0-beta.1
+
+- feat: Adds legacy client support for Email auth migrations.
+- feat: Exposes configuration options for finding and deleting broken future calls on server startup.
+- feat(EXPERIMENTAL): Introduces a new `serverpod start` command for running the server, docker and app with `--watch` flag for hot reload/restart support.
+- refactor: Decouples all database-related code from `serverpod` into the new `serverpod_database` package to allow supporting client-side databases in the future.
+- refactor: Removes database-specific default values from the definition files to allow supporting extra database dialects.
+- refactor: Reduces the time taken to run incremental generation steps with the `--watch` flag by x15 and regular `generate` command by 20%.
+
+## 3.4.7
+
+- fix: Fixes constraints drop failing on Postgres due to already removed columns.
+- fix: Adds missing `configOverride` forward to the test server.
+- fix: Prevents triggering auth event listener when invalidating cache for JWT token refresh.
+
+## 3.4.6
+
+- fix: Removes wrong documentation link on `PasswordMissingException`.
+- fix: Adds top-level `.gitignore` on created projects to ignore the `.dart_tool` of the workspace.
+- fix: Allows `serverpod create .` in the current directory.
+- fix: Makes `insert` with `ignoreConflicts` and `!persist` fields atomic.
+- fix: Extends immutable non-constant default validation to cover id field.
+- fix: Adds missing `onSessionCreated` to `ServerSideSessionsConfigFromPasswords` constructor.
+- fix: Invalidates the cached refresh token before rotating in case the storage has changed.
+- chore: Bumps `jose` dependency on legacy auth to fix `CVE-2026-34240`. Also backported to 2.9.3.
+
+## 3.4.5
+
+- fix: Truncates logged error messages to prevent hanging on formatter issues during code generation.
+- fix: Fixes the CLI invoking the welcome page more than once per install.
+- chore: Moves the `flutter_secure_storage` override from the workspace to the created Flutter package on a new project.
+
+## 3.4.4
+
+- fix: Fixes Google Sign-In not handling error when invoked directly from the controller.
+- fix: Allows configuring the authority host for the Microsoft identity provider.
+- fix: Adds support for additional authentication parameters on the Microsoft identity provider.
+- fix: Adds support for additional authentication parameters on the GitHub identity provider.
+
+## 3.4.3
+
+- refactor: Changes the `session` parameter type on repository methods to `DatabaseSession`.
+- fix: Fixes serialization of model objects in named record fields when mapping to JSON.
+- fix: Fixes CLI showing warnings duplicated on projects with generated future calls.
+- fix: Fixes missing generated `_Undefined` class when parent sealed classes have nullable fields and children have only non-nullable fields.
+- fix: Fixes conflict on the `Cache` class import after `relic` upgrade to version `1.2.0`.
+
+## 3.4.2
+
+- fix: Fixes wrong import URL to `serverpod_service_client` of shared models referenced as fields in other shared models.
+- fix: Adds a warning to inform when the server is started with a `Protocol` class from an external package.
+- fix: Skips explicit `DROP CONSTRAINT` when referenced table is dropped via `CASCADE`.
+
+## 3.4.1
+
+- fix: Fixes shared models using inexistent `toJsonForProtocol` method if referenced as fields on models with `!persist` or `serverOnly` fields.
+- fix: Fixes not being able to reference shared models without the module alias on fields of other models.
+
+## 3.4.0
+
+Serverpod 3.4 comes with two long-awaited features: shared models between server and client and allowing caching any type of object to the local/Redis cache. It also brings two new Identity Providers (Facebook and Microsoft), a complete revamp to the cloud storage system, ignore conflicts on inserts and row-level locking on the database, shell completion support to the CLI and more improvements to the developer experience.
+
+### Core
+
+- feat: Allows generating shared models between server and client on shared packages.
+- feat: Allows caching any type of object to the local/Redis cache.
+- feat: Allows ignoring conflicts on inserts through the `ignoreConflicts` parameter of the `insert` method. ([@FXschwartz](https://github.com/FXschwartz))
+- feat: Adds PostgreSQL row-level locking through `find*` and `lockRows` methods. ([@FXschwartz](https://github.com/FXschwartz))
+- feat: Adds support for FutureCall methods with only the `Session` parameter.
+- fix: Fixes the time unit display on session log duration. ([@Tokotuu](https://github.com/Tokotuu))
+- chore: Logs a warning when server tries to run unregistered future calls.
+
+### Authentication
+
+- feat: Adds support to Facebook Identity Provider. ([@vfiruz97](https://github.com/vfiruz97))
+- feat: Adds Microsoft Identity Provider. ([@vfiruz97](https://github.com/vfiruz97))
+- feat: Allows attaching custom metadata to SSS/JWT tokens.
+- feat: Adds `expired` filter and `limit` parameter to `ServerSideSessions.listSessions`.
+- fix: Allows handling Android and Web redirection for Apple Sign In. ([@jakubgiminski](https://github.com/jakubgiminski))
+- fix: Correctly binds `AuthUsersConfig` to `AnonymousIdp`. ([@craiglabenz](https://github.com/craiglabenz))
+
+## Cloud Storage
+
+- feat: Introduces a shared `serverpod_cloud_storage_s3_compat` base package for S3-compatible storage integrations.
+- feat: Adds a native Google Cloud Storage implementation on the `serverpod_cloud_storage_gcp` package with Application Default Credentials support.
+- feat: Adds a new `serverpod_cloud_storage_r2` package for Cloudflare R2.
+- feat: Adds new parameters `preventOverwrite`, `maxFileSize`, `contentLength`, and `expirationDuration` for finer upload control.
+- refactor: Refactors the existing S3 and GCP storage packages to reduce code duplication by using the `serverpod_cloud_storage_s3_compat` package.
+- fix: Fixes several issues on the storage packages like silent error swallowing, HTTP client leaks, and buffer aliasing bugs.
+
+### Developer tooling
+
+- feat: Generates `.vscode/launch.json` with a composite project as default for full-stack debugging.
+- feat: Adds shell completion support to Serverpod CLI. ([@FXschwartz](https://github.com/FXschwartz))
+
 ## 3.3.1
 
 - fix: Fixes text of GitHub IDP button not aligning correctly when using the left alignment. ([@vfiruz97](https://github.com/vfiruz97))
@@ -251,6 +377,9 @@ Serverpod now supports polymorphism on models and endpoints. This allows you to 
 - chore: Marks legacy streaming endpoints and associated code as deprecated. Streaming methods are now the preferred way to handle streaming between the server and client.
 - chore: Marks `AuthenticationKeyManager` as deprecated in favour of the new `ClientAuthKeyProvider` interface.
 - chore: Bumps minimum Dart version to 3.8.0 and Flutter version to 3.32.0.
+
+### 2.9.3
+- chore: Bumps `jose` dependency on legacy auth to fix `CVE-2026-34240`. Backported from 3.4.6.
 
 ## 2.9.2
 - fix: Fixes a crash when persistent logging is disabled but database is enabled.

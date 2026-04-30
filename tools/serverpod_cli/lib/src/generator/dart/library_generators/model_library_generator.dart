@@ -221,6 +221,8 @@ class SerializableModelLibraryGenerator {
           // https://github.com/serverpod/serverpod/issues/3462
           if (buildRepository.hasRelationWithNonNullableIds(fields)) {
             libraryBuilder.ignoreForFile.add('unnecessary_null_comparison');
+            // On Dart 3.10+, this issue becomes a `dead_code` lint.
+            libraryBuilder.ignoreForFile.add('dead_code');
           }
         }
       },
@@ -284,6 +286,7 @@ class SerializableModelLibraryGenerator {
           fields,
           subDirParts: classDefinition.subDirParts,
           hasImplicitClass: false,
+          currentSharedPackageName: classDefinition.sharedPackageName,
         ),
       ]);
 
@@ -298,7 +301,13 @@ class SerializableModelLibraryGenerator {
         ),
       );
 
-      classBuilder.methods.add(_buildModelClassToJsonMethod(fields, className));
+      classBuilder.methods.add(
+        _buildModelClassToJsonMethod(
+          fields,
+          className,
+          classDefinition.sharedPackageName,
+        ),
+      );
 
       // Serialization for database and everything
       if (serverCode) {
@@ -307,6 +316,7 @@ class SerializableModelLibraryGenerator {
             fields,
             classDefinition.serverOnly,
             className,
+            classDefinition.sharedPackageName,
           ),
         );
       }
@@ -440,6 +450,7 @@ class SerializableModelLibraryGenerator {
             fields,
             subDirParts: classDefinition.subDirParts,
             hasImplicitClass: hasImplicitClass,
+            currentSharedPackageName: classDefinition.sharedPackageName,
           ),
       ]);
 
@@ -492,7 +503,11 @@ class SerializableModelLibraryGenerator {
 
       if (!classDefinition.isSealed) {
         classBuilder.methods.add(
-          _buildModelClassToJsonMethod(fields, className),
+          _buildModelClassToJsonMethod(
+            fields,
+            className,
+            classDefinition.sharedPackageName,
+          ),
         );
       }
 
@@ -504,6 +519,7 @@ class SerializableModelLibraryGenerator {
               fields,
               classDefinition.serverOnly,
               className,
+              classDefinition.sharedPackageName,
             ),
           );
         }
@@ -546,7 +562,7 @@ class SerializableModelLibraryGenerator {
     var descendants = classDefinition.descendantClasses;
 
     for (var descendant in descendants) {
-      descendantFields.addAll(descendant.fields);
+      descendantFields.addAll(descendant.fieldsIncludingInherited);
     }
 
     return descendantFields
@@ -1360,6 +1376,7 @@ class SerializableModelLibraryGenerator {
           Parameter(
             (p) => p
               ..name = 'orderDescending'
+              ..annotations.add(deprecatedOrderDescendingAnnotation())
               ..named = true
               ..defaultTo = const Code('false')
               ..type = refer('bool'),
@@ -1386,7 +1403,11 @@ class SerializableModelLibraryGenerator {
               'orderBy': refer('orderBy').nullSafeProperty('call').call(
                 [refer(className).property('t')],
               ),
-              'orderDescending': refer('orderDescending'),
+              'orderDescending': const CodeExpression(
+                Code(
+                  '// ignore: deprecated_member_use_from_same_package\norderDescending',
+                ),
+              ),
               'orderByList': refer('orderByList').nullSafeProperty('call').call(
                 [refer(className).property('t')],
               ),
@@ -1400,6 +1421,7 @@ class SerializableModelLibraryGenerator {
   Method _buildModelClassToJsonMethod(
     Iterable<SerializableModelFieldDefinition> fields,
     String className,
+    String? currentSharedPackageName,
   ) {
     return Method(
       (m) {
@@ -1422,6 +1444,7 @@ class SerializableModelLibraryGenerator {
           filteredFields,
           _toJsonMethodName,
           className,
+          currentSharedPackageName,
         );
       },
     );
@@ -1431,6 +1454,7 @@ class SerializableModelLibraryGenerator {
     Iterable<SerializableModelFieldDefinition> fields,
     bool isServerOnlyClass,
     String className,
+    String? currentSharedPackageName,
   ) {
     return Method(
       (m) {
@@ -1447,6 +1471,7 @@ class SerializableModelLibraryGenerator {
           filteredFields,
           _toJsonForProtocolMethodName,
           isServerOnlyClass ? null : className,
+          currentSharedPackageName,
         );
       },
     );
@@ -1511,6 +1536,7 @@ class SerializableModelLibraryGenerator {
     TypeDefinition fieldType,
     String methodName, {
     bool nullCheckedReference = false,
+    String? currentSharedPackageName,
   }) {
     if (fieldType.isSerializedValue) return fieldRef;
 
@@ -1518,11 +1544,10 @@ class SerializableModelLibraryGenerator {
     // to treat it as potentially null.
     var nullableField = nullCheckedReference ? false : fieldType.nullable;
 
-    var protocolRef = refer(
-      'Protocol',
-      serverCode
-          ? 'package:${config.serverPackage}/src/generated/protocol.dart'
-          : 'package:${config.dartClientPackage}/src/protocol/protocol.dart',
+    var protocolRef = getProtocolReference(
+      serverCode,
+      config,
+      currentSharedPackageName: currentSharedPackageName,
     );
     if (fieldType.isRecordType) {
       return protocolRef.call([]).property(mapRecordToJsonFuncName).call(
@@ -1567,6 +1592,7 @@ class SerializableModelLibraryGenerator {
             const Code('?'),
             toJsonForProtocolExpression.call([]).code,
             const Code(':'),
+            const Code('// ignore: dead_code\n'),
             toJsonExpression.call([]).code,
           ],
         ),
@@ -1574,7 +1600,14 @@ class SerializableModelLibraryGenerator {
       return fieldExpression;
     }
 
-    var toJson = fieldType.isSerializedByExtension || fieldType.isEnumType
+    // Shared models implement SerializableModel but not ProtocolSerialization
+    // because they can not have `serverOnly` fields.
+    var isSharedClass =
+        fieldType.projectModelDefinition?.isSharedModel ?? false;
+    var toJson =
+        fieldType.isSerializedByExtension ||
+            fieldType.isEnumType ||
+            isSharedClass
         ? _toJsonMethodName
         : methodName;
 
@@ -1599,6 +1632,7 @@ class SerializableModelLibraryGenerator {
               refer('v'),
               fieldType.generics.first,
               methodName,
+              currentSharedPackageName: currentSharedPackageName,
             ).code,
         ).closure,
       };
@@ -1616,6 +1650,7 @@ class SerializableModelLibraryGenerator {
                 refer('k'),
                 fieldType.generics.first,
                 methodName,
+                currentSharedPackageName: currentSharedPackageName,
               ).code,
           ).closure,
         };
@@ -1634,6 +1669,7 @@ class SerializableModelLibraryGenerator {
                 refer('v'),
                 fieldType.generics.last,
                 methodName,
+                currentSharedPackageName: currentSharedPackageName,
               ).code,
           ).closure,
         };
@@ -1647,6 +1683,7 @@ class SerializableModelLibraryGenerator {
     Iterable<SerializableModelFieldDefinition> fields,
     String toJsonMethodName,
     String? className,
+    String? currentSharedPackageName,
   ) {
     var map = fields.fold<Map<Code, Expression>>({}, (map, field) {
       var fieldName = _createSerializableFieldNameReference(
@@ -1661,6 +1698,7 @@ class SerializableModelLibraryGenerator {
         // Hidden serializable fields are final so no additional null check
         // is needed.
         nullCheckedReference: field.hiddenSerializableField(serverCode),
+        currentSharedPackageName: currentSharedPackageName,
       );
 
       final fieldKey = field.jsonKey;
@@ -1689,6 +1727,7 @@ class SerializableModelLibraryGenerator {
     List<SerializableModelFieldDefinition> fields, {
     required List<String> subDirParts,
     required bool hasImplicitClass,
+    String? currentSharedPackageName,
   }) {
     var visibleFields = fields.where(
       (field) => field.shouldIncludeField(serverCode),
@@ -1713,6 +1752,7 @@ class SerializableModelLibraryGenerator {
                 serverCode,
                 config,
                 subDirParts,
+                currentSharedPackageName,
               ),
             for (var field in hiddenSerializableFields)
               createFieldName(serverCode, field): buildFromJsonForField(
@@ -1720,6 +1760,7 @@ class SerializableModelLibraryGenerator {
                 serverCode,
                 config,
                 subDirParts,
+                currentSharedPackageName,
               ),
           })
           .returned
@@ -2221,11 +2262,10 @@ class SerializableModelLibraryGenerator {
 
             // For records, we need to call mapRecordToJson
             if (field.type.isRecordType) {
-              var protocolRef = refer(
-                'Protocol',
-                serverCode
-                    ? 'package:${config.serverPackage}/src/generated/protocol.dart'
-                    : 'package:${config.dartClientPackage}/src/protocol/protocol.dart',
+              var protocolRef = getProtocolReference(
+                serverCode,
+                config,
+                currentSharedPackageName: classDefinition.sharedPackageName,
               );
 
               m.body = refer('ColumnValue', serverpodUrl(serverCode)).call([
@@ -2336,7 +2376,9 @@ class SerializableModelLibraryGenerator {
                   ..symbol = field.type.columnType
                   ..url = serverpodUrl(true)
                   ..types.addAll(
-                    field.type.isEnumType || field.type.isColumnSerializable
+                    field.type.isEnumType ||
+                            field.type.isColumnSerializable ||
+                            field.type.isColumnStructured
                         ? [
                             field.type.reference(
                               serverCode,
@@ -2718,7 +2760,7 @@ class SerializableModelLibraryGenerator {
         ..symbol = field.type.columnType
         ..url = serverpodUrl(true)
         ..types.addAll(
-          field.type.isColumnSerializable
+          field.type.isColumnSerializable || field.type.isColumnStructured
               ? [
                   field.type.reference(
                     serverCode,
@@ -2866,6 +2908,7 @@ class SerializableModelLibraryGenerator {
         Parameter(
           (p) => p
             ..name = 'orderDescending'
+            ..annotations.add(deprecatedOrderDescendingAnnotation())
             ..toSuper = true
             ..named = true,
         ),

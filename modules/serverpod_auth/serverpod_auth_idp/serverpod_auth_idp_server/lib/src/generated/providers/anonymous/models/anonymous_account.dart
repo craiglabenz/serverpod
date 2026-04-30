@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -106,6 +106,7 @@ abstract class AnonymousAccount
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AnonymousAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     AnonymousAccountInclude? include,
@@ -115,7 +116,8 @@ abstract class AnonymousAccount
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(AnonymousAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(AnonymousAccount.t),
       include: include,
     );
@@ -254,6 +256,7 @@ class AnonymousAccountIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -296,11 +299,12 @@ class AnonymousAccountRepository {
   /// );
   /// ```
   Future<List<AnonymousAccount>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AnonymousAccountTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AnonymousAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     _i1.Transaction? transaction,
@@ -310,7 +314,8 @@ class AnonymousAccountRepository {
       where: where?.call(AnonymousAccount.t),
       orderBy: orderBy?.call(AnonymousAccount.t),
       orderByList: orderByList?.call(AnonymousAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -336,10 +341,11 @@ class AnonymousAccountRepository {
   /// );
   /// ```
   Future<AnonymousAccount?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AnonymousAccountTable>? where,
     int? offset,
     _i1.OrderByBuilder<AnonymousAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     _i1.Transaction? transaction,
@@ -349,7 +355,8 @@ class AnonymousAccountRepository {
       where: where?.call(AnonymousAccount.t),
       orderBy: orderBy?.call(AnonymousAccount.t),
       orderByList: orderByList?.call(AnonymousAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -358,7 +365,7 @@ class AnonymousAccountRepository {
 
   /// Finds a single [AnonymousAccount] by its [id] or null if no such row exists.
   Future<AnonymousAccount?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     AnonymousAccountInclude? include,
@@ -376,14 +383,20 @@ class AnonymousAccountRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<AnonymousAccount>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AnonymousAccount> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<AnonymousAccount>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -391,7 +404,7 @@ class AnonymousAccountRepository {
   ///
   /// The returned [AnonymousAccount] will have its `id` field set.
   Future<AnonymousAccount> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AnonymousAccount row, {
     _i1.Transaction? transaction,
   }) async {
@@ -407,7 +420,7 @@ class AnonymousAccountRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<AnonymousAccount>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AnonymousAccount> rows, {
     _i1.ColumnSelections<AnonymousAccountTable>? columns,
     _i1.Transaction? transaction,
@@ -423,7 +436,7 @@ class AnonymousAccountRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<AnonymousAccount> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AnonymousAccount row, {
     _i1.ColumnSelections<AnonymousAccountTable>? columns,
     _i1.Transaction? transaction,
@@ -438,7 +451,7 @@ class AnonymousAccountRepository {
   /// Updates a single [AnonymousAccount] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<AnonymousAccount?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<AnonymousAccountUpdateTable>
     columnValues,
@@ -454,7 +467,7 @@ class AnonymousAccountRepository {
   /// Updates all [AnonymousAccount]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<AnonymousAccount>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<AnonymousAccountUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<AnonymousAccountTable> where,
@@ -462,6 +475,7 @@ class AnonymousAccountRepository {
     int? offset,
     _i1.OrderByBuilder<AnonymousAccountTable>? orderBy,
     _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -472,28 +486,41 @@ class AnonymousAccountRepository {
       offset: offset,
       orderBy: orderBy?.call(AnonymousAccount.t),
       orderByList: orderByList?.call(AnonymousAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [AnonymousAccount]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<AnonymousAccount>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AnonymousAccount> rows, {
+    _i1.OrderByBuilder<AnonymousAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<AnonymousAccount>(
       rows,
+      orderBy: orderBy?.call(AnonymousAccount.t),
+      orderByList: orderByList?.call(AnonymousAccount.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [AnonymousAccount].
   Future<AnonymousAccount> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AnonymousAccount row, {
     _i1.Transaction? transaction,
   }) async {
@@ -504,13 +531,24 @@ class AnonymousAccountRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<AnonymousAccount>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<AnonymousAccountTable> where,
+    _i1.OrderByBuilder<AnonymousAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<AnonymousAccountTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<AnonymousAccount>(
       where: where(AnonymousAccount.t),
+      orderBy: orderBy?.call(AnonymousAccount.t),
+      orderByList: orderByList?.call(AnonymousAccount.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -518,7 +556,7 @@ class AnonymousAccountRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AnonymousAccountTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -526,6 +564,22 @@ class AnonymousAccountRepository {
     return session.db.count<AnonymousAccount>(
       where: where?.call(AnonymousAccount.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [AnonymousAccount] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<AnonymousAccountTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<AnonymousAccount>(
+      where: where(AnonymousAccount.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -537,7 +591,7 @@ class AnonymousAccountAttachRowRepository {
   /// Creates a relation between the given [AnonymousAccount] and [AuthUser]
   /// by setting the [AnonymousAccount]'s foreign key `authUserId` to refer to the [AuthUser].
   Future<void> authUser(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AnonymousAccount anonymousAccount,
     _i2.AuthUser authUser, {
     _i1.Transaction? transaction,

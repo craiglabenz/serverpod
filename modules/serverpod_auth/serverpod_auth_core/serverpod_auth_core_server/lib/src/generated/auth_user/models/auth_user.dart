@@ -110,6 +110,7 @@ abstract class AuthUser
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AuthUserTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AuthUserTable>? orderByList,
     AuthUserInclude? include,
@@ -119,7 +120,8 @@ abstract class AuthUser
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(AuthUser.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(AuthUser.t),
       include: include,
     );
@@ -240,6 +242,7 @@ class AuthUserIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -280,11 +283,12 @@ class AuthUserRepository {
   /// );
   /// ```
   Future<List<AuthUser>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AuthUserTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AuthUserTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AuthUserTable>? orderByList,
     _i1.Transaction? transaction,
@@ -295,7 +299,8 @@ class AuthUserRepository {
       where: where?.call(AuthUser.t),
       orderBy: orderBy?.call(AuthUser.t),
       orderByList: orderByList?.call(AuthUser.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -322,10 +327,11 @@ class AuthUserRepository {
   /// );
   /// ```
   Future<AuthUser?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AuthUserTable>? where,
     int? offset,
     _i1.OrderByBuilder<AuthUserTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AuthUserTable>? orderByList,
     _i1.Transaction? transaction,
@@ -336,7 +342,8 @@ class AuthUserRepository {
       where: where?.call(AuthUser.t),
       orderBy: orderBy?.call(AuthUser.t),
       orderByList: orderByList?.call(AuthUser.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       lockMode: lockMode,
@@ -346,7 +353,7 @@ class AuthUserRepository {
 
   /// Finds a single [AuthUser] by its [id] or null if no such row exists.
   Future<AuthUser?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     _i1.LockMode? lockMode,
@@ -366,14 +373,20 @@ class AuthUserRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<AuthUser>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AuthUser> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<AuthUser>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -381,7 +394,7 @@ class AuthUserRepository {
   ///
   /// The returned [AuthUser] will have its `id` field set.
   Future<AuthUser> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AuthUser row, {
     _i1.Transaction? transaction,
   }) async {
@@ -397,7 +410,7 @@ class AuthUserRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<AuthUser>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AuthUser> rows, {
     _i1.ColumnSelections<AuthUserTable>? columns,
     _i1.Transaction? transaction,
@@ -413,7 +426,7 @@ class AuthUserRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<AuthUser> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AuthUser row, {
     _i1.ColumnSelections<AuthUserTable>? columns,
     _i1.Transaction? transaction,
@@ -428,7 +441,7 @@ class AuthUserRepository {
   /// Updates a single [AuthUser] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<AuthUser?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<AuthUserUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -443,13 +456,14 @@ class AuthUserRepository {
   /// Updates all [AuthUser]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<AuthUser>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<AuthUserUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<AuthUserTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AuthUserTable>? orderBy,
     _i1.OrderByListBuilder<AuthUserTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -460,28 +474,41 @@ class AuthUserRepository {
       offset: offset,
       orderBy: orderBy?.call(AuthUser.t),
       orderByList: orderByList?.call(AuthUser.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [AuthUser]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<AuthUser>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AuthUser> rows, {
+    _i1.OrderByBuilder<AuthUserTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<AuthUserTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<AuthUser>(
       rows,
+      orderBy: orderBy?.call(AuthUser.t),
+      orderByList: orderByList?.call(AuthUser.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [AuthUser].
   Future<AuthUser> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AuthUser row, {
     _i1.Transaction? transaction,
   }) async {
@@ -492,13 +519,24 @@ class AuthUserRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<AuthUser>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<AuthUserTable> where,
+    _i1.OrderByBuilder<AuthUserTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<AuthUserTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<AuthUser>(
       where: where(AuthUser.t),
+      orderBy: orderBy?.call(AuthUser.t),
+      orderByList: orderByList?.call(AuthUser.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -506,7 +544,7 @@ class AuthUserRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AuthUserTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -520,7 +558,7 @@ class AuthUserRepository {
 
   /// Acquires row-level locks on [AuthUser] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<AuthUserTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,

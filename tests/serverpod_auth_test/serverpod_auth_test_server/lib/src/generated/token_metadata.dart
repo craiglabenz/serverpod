@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -123,6 +123,7 @@ abstract class TokenMetadata
     int? limit,
     int? offset,
     _i1.OrderByBuilder<TokenMetadataTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<TokenMetadataTable>? orderByList,
     TokenMetadataInclude? include,
@@ -132,7 +133,8 @@ abstract class TokenMetadata
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(TokenMetadata.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(TokenMetadata.t),
       include: include,
     );
@@ -320,6 +322,7 @@ class TokenMetadataIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -362,11 +365,12 @@ class TokenMetadataRepository {
   /// );
   /// ```
   Future<List<TokenMetadata>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TokenMetadataTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<TokenMetadataTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<TokenMetadataTable>? orderByList,
     _i1.Transaction? transaction,
@@ -378,7 +382,8 @@ class TokenMetadataRepository {
       where: where?.call(TokenMetadata.t),
       orderBy: orderBy?.call(TokenMetadata.t),
       orderByList: orderByList?.call(TokenMetadata.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -406,10 +411,11 @@ class TokenMetadataRepository {
   /// );
   /// ```
   Future<TokenMetadata?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TokenMetadataTable>? where,
     int? offset,
     _i1.OrderByBuilder<TokenMetadataTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<TokenMetadataTable>? orderByList,
     _i1.Transaction? transaction,
@@ -421,7 +427,8 @@ class TokenMetadataRepository {
       where: where?.call(TokenMetadata.t),
       orderBy: orderBy?.call(TokenMetadata.t),
       orderByList: orderByList?.call(TokenMetadata.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -432,7 +439,7 @@ class TokenMetadataRepository {
 
   /// Finds a single [TokenMetadata] by its [id] or null if no such row exists.
   Future<TokenMetadata?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
     TokenMetadataInclude? include,
@@ -454,14 +461,20 @@ class TokenMetadataRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<TokenMetadata>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TokenMetadata> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<TokenMetadata>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -469,7 +482,7 @@ class TokenMetadataRepository {
   ///
   /// The returned [TokenMetadata] will have its `id` field set.
   Future<TokenMetadata> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TokenMetadata row, {
     _i1.Transaction? transaction,
   }) async {
@@ -485,7 +498,7 @@ class TokenMetadataRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<TokenMetadata>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TokenMetadata> rows, {
     _i1.ColumnSelections<TokenMetadataTable>? columns,
     _i1.Transaction? transaction,
@@ -501,7 +514,7 @@ class TokenMetadataRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<TokenMetadata> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TokenMetadata row, {
     _i1.ColumnSelections<TokenMetadataTable>? columns,
     _i1.Transaction? transaction,
@@ -516,7 +529,7 @@ class TokenMetadataRepository {
   /// Updates a single [TokenMetadata] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<TokenMetadata?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<TokenMetadataUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -531,13 +544,14 @@ class TokenMetadataRepository {
   /// Updates all [TokenMetadata]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<TokenMetadata>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<TokenMetadataUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<TokenMetadataTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<TokenMetadataTable>? orderBy,
     _i1.OrderByListBuilder<TokenMetadataTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -548,28 +562,41 @@ class TokenMetadataRepository {
       offset: offset,
       orderBy: orderBy?.call(TokenMetadata.t),
       orderByList: orderByList?.call(TokenMetadata.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [TokenMetadata]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<TokenMetadata>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<TokenMetadata> rows, {
+    _i1.OrderByBuilder<TokenMetadataTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<TokenMetadataTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<TokenMetadata>(
       rows,
+      orderBy: orderBy?.call(TokenMetadata.t),
+      orderByList: orderByList?.call(TokenMetadata.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [TokenMetadata].
   Future<TokenMetadata> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TokenMetadata row, {
     _i1.Transaction? transaction,
   }) async {
@@ -580,13 +607,24 @@ class TokenMetadataRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<TokenMetadata>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TokenMetadataTable> where,
+    _i1.OrderByBuilder<TokenMetadataTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<TokenMetadataTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<TokenMetadata>(
       where: where(TokenMetadata.t),
+      orderBy: orderBy?.call(TokenMetadata.t),
+      orderByList: orderByList?.call(TokenMetadata.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -594,7 +632,7 @@ class TokenMetadataRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<TokenMetadataTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -608,7 +646,7 @@ class TokenMetadataRepository {
 
   /// Acquires row-level locks on [TokenMetadata] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<TokenMetadataTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,
@@ -629,7 +667,7 @@ class TokenMetadataAttachRowRepository {
   /// Creates a relation between the given [TokenMetadata] and [RefreshToken]
   /// by setting the [TokenMetadata]'s foreign key `refreshTokenId` to refer to the [RefreshToken].
   Future<void> refreshToken(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     TokenMetadata tokenMetadata,
     _i2.RefreshToken refreshToken, {
     _i1.Transaction? transaction,

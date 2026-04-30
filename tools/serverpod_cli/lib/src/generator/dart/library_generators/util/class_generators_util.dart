@@ -74,11 +74,19 @@ TypeReference typeOrderByListBuilder(
   );
 }
 
+/// Deprecation annotation for the [orderDescending] parameter.
+Expression deprecatedOrderDescendingAnnotation() {
+  return refer('Deprecated').call([
+    literalString('Use desc() on the orderBy column instead.'),
+  ]);
+}
+
 Expression buildFromJsonForField(
   SerializableModelFieldDefinition field,
   bool serverCode,
   GeneratorConfig config,
   List<String> subDirParts,
+  String? currentSharedPackageName,
 ) {
   Reference jsonReference = refer('jsonSerialization');
   return _buildFromJson(
@@ -89,6 +97,7 @@ Expression buildFromJsonForField(
     fieldName: field.jsonKey,
     subDirParts: subDirParts,
     field: field,
+    currentSharedPackageName: currentSharedPackageName,
   );
 }
 
@@ -118,6 +127,7 @@ Expression _buildFromJson(
   Expression? mapExpression,
   required List<String> subDirParts,
   SerializableModelFieldDefinition? field,
+  String? currentSharedPackageName,
 }) {
   Expression valueExpression =
       mapExpression ?? jsonReference.index(literalString(fieldName!));
@@ -183,6 +193,7 @@ Expression _buildFromJson(
         serverCode,
         config,
         subDirParts,
+        currentSharedPackageName: currentSharedPackageName,
       );
     case ValueType.classType:
       return _buildClassTypeFromJson(
@@ -192,6 +203,7 @@ Expression _buildFromJson(
         config,
         subDirParts,
         field,
+        currentSharedPackageName: currentSharedPackageName,
       );
     case ValueType.record:
       return _buildRecordTypeFromJson(
@@ -200,6 +212,7 @@ Expression _buildFromJson(
         serverCode,
         config,
         subDirParts,
+        currentSharedPackageName: currentSharedPackageName,
       );
   }
 }
@@ -314,10 +327,15 @@ Expression _buildProtocolDeserialize(
   Expression valueExpression,
   bool serverCode,
   GeneratorConfig config,
-  List<String> subDirParts,
-) {
+  List<String> subDirParts, {
+  String? currentSharedPackageName,
+}) {
   return CodeExpression(
-    _getProtocolReference(serverCode, config)
+    getProtocolReference(
+          serverCode,
+          config,
+          currentSharedPackageName: currentSharedPackageName,
+        )
         .call([])
         .property('deserialize')
         .call(
@@ -342,8 +360,9 @@ Expression _buildClassTypeFromJson(
   bool serverCode,
   GeneratorConfig config,
   List<String> subDirParts,
-  SerializableModelFieldDefinition? field,
-) {
+  SerializableModelFieldDefinition? field, {
+  String? currentSharedPackageName,
+}) {
   if (!type.customClass) {
     return _buildProtocolDeserialize(
       type,
@@ -351,6 +370,7 @@ Expression _buildClassTypeFromJson(
       serverCode,
       config,
       subDirParts,
+      currentSharedPackageName: currentSharedPackageName,
     );
   }
 
@@ -398,15 +418,20 @@ Expression _buildRecordTypeFromJson(
   Expression valueExpression,
   bool serverCode,
   GeneratorConfig config,
-  List<String> subDirParts,
-) {
+  List<String> subDirParts, {
+  String? currentSharedPackageName,
+}) {
   return CodeExpression(
     Block.of([
       if (type.nullable) ...[
         valueExpression.code,
         const Code('== null ? null : '),
       ],
-      _getProtocolReference(serverCode, config)
+      getProtocolReference(
+            serverCode,
+            config,
+            currentSharedPackageName: currentSharedPackageName,
+          )
           .newInstance([])
           .property('deserialize')
           .call(
@@ -460,11 +485,17 @@ extension ExpressionExtension on Expression {
   }
 }
 
-Reference _getProtocolReference(bool serverCode, GeneratorConfig config) {
+Reference getProtocolReference(
+  bool serverCode,
+  GeneratorConfig config, {
+  String? currentSharedPackageName,
+}) {
   return refer(
     'Protocol',
     serverCode
         ? 'package:${config.serverPackage}/src/generated/protocol.dart'
+        : currentSharedPackageName != null
+        ? 'package:$currentSharedPackageName/$currentSharedPackageName.dart'
         : 'package:${config.dartClientPackage}/src/protocol/protocol.dart',
   );
 }

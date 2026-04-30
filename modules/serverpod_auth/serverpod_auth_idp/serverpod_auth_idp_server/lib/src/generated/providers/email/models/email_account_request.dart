@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -147,6 +147,7 @@ abstract class EmailAccountRequest
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EmailAccountRequestTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmailAccountRequestTable>? orderByList,
     EmailAccountRequestInclude? include,
@@ -156,7 +157,8 @@ abstract class EmailAccountRequest
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(EmailAccountRequest.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(EmailAccountRequest.t),
       include: include,
     );
@@ -370,6 +372,7 @@ class EmailAccountRequestIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -414,11 +417,12 @@ class EmailAccountRequestRepository {
   /// );
   /// ```
   Future<List<EmailAccountRequest>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmailAccountRequestTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EmailAccountRequestTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmailAccountRequestTable>? orderByList,
     _i1.Transaction? transaction,
@@ -428,7 +432,8 @@ class EmailAccountRequestRepository {
       where: where?.call(EmailAccountRequest.t),
       orderBy: orderBy?.call(EmailAccountRequest.t),
       orderByList: orderByList?.call(EmailAccountRequest.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -454,10 +459,11 @@ class EmailAccountRequestRepository {
   /// );
   /// ```
   Future<EmailAccountRequest?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmailAccountRequestTable>? where,
     int? offset,
     _i1.OrderByBuilder<EmailAccountRequestTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EmailAccountRequestTable>? orderByList,
     _i1.Transaction? transaction,
@@ -467,7 +473,8 @@ class EmailAccountRequestRepository {
       where: where?.call(EmailAccountRequest.t),
       orderBy: orderBy?.call(EmailAccountRequest.t),
       orderByList: orderByList?.call(EmailAccountRequest.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -476,7 +483,7 @@ class EmailAccountRequestRepository {
 
   /// Finds a single [EmailAccountRequest] by its [id] or null if no such row exists.
   Future<EmailAccountRequest?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     EmailAccountRequestInclude? include,
@@ -494,14 +501,20 @@ class EmailAccountRequestRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<EmailAccountRequest>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EmailAccountRequest> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<EmailAccountRequest>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -509,7 +522,7 @@ class EmailAccountRequestRepository {
   ///
   /// The returned [EmailAccountRequest] will have its `id` field set.
   Future<EmailAccountRequest> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailAccountRequest row, {
     _i1.Transaction? transaction,
   }) async {
@@ -525,7 +538,7 @@ class EmailAccountRequestRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<EmailAccountRequest>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EmailAccountRequest> rows, {
     _i1.ColumnSelections<EmailAccountRequestTable>? columns,
     _i1.Transaction? transaction,
@@ -541,7 +554,7 @@ class EmailAccountRequestRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<EmailAccountRequest> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailAccountRequest row, {
     _i1.ColumnSelections<EmailAccountRequestTable>? columns,
     _i1.Transaction? transaction,
@@ -556,7 +569,7 @@ class EmailAccountRequestRepository {
   /// Updates a single [EmailAccountRequest] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<EmailAccountRequest?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<EmailAccountRequestUpdateTable>
     columnValues,
@@ -572,7 +585,7 @@ class EmailAccountRequestRepository {
   /// Updates all [EmailAccountRequest]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<EmailAccountRequest>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<EmailAccountRequestUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<EmailAccountRequestTable> where,
@@ -580,6 +593,7 @@ class EmailAccountRequestRepository {
     int? offset,
     _i1.OrderByBuilder<EmailAccountRequestTable>? orderBy,
     _i1.OrderByListBuilder<EmailAccountRequestTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -590,28 +604,41 @@ class EmailAccountRequestRepository {
       offset: offset,
       orderBy: orderBy?.call(EmailAccountRequest.t),
       orderByList: orderByList?.call(EmailAccountRequest.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [EmailAccountRequest]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<EmailAccountRequest>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EmailAccountRequest> rows, {
+    _i1.OrderByBuilder<EmailAccountRequestTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<EmailAccountRequestTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<EmailAccountRequest>(
       rows,
+      orderBy: orderBy?.call(EmailAccountRequest.t),
+      orderByList: orderByList?.call(EmailAccountRequest.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [EmailAccountRequest].
   Future<EmailAccountRequest> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailAccountRequest row, {
     _i1.Transaction? transaction,
   }) async {
@@ -622,13 +649,24 @@ class EmailAccountRequestRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<EmailAccountRequest>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<EmailAccountRequestTable> where,
+    _i1.OrderByBuilder<EmailAccountRequestTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<EmailAccountRequestTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<EmailAccountRequest>(
       where: where(EmailAccountRequest.t),
+      orderBy: orderBy?.call(EmailAccountRequest.t),
+      orderByList: orderByList?.call(EmailAccountRequest.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -636,7 +674,7 @@ class EmailAccountRequestRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EmailAccountRequestTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -644,6 +682,22 @@ class EmailAccountRequestRepository {
     return session.db.count<EmailAccountRequest>(
       where: where?.call(EmailAccountRequest.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [EmailAccountRequest] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<EmailAccountRequestTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<EmailAccountRequest>(
+      where: where(EmailAccountRequest.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -655,7 +709,7 @@ class EmailAccountRequestAttachRowRepository {
   /// Creates a relation between the given [EmailAccountRequest] and [SecretChallenge]
   /// by setting the [EmailAccountRequest]'s foreign key `challengeId` to refer to the [SecretChallenge].
   Future<void> challenge(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailAccountRequest emailAccountRequest,
     _i2.SecretChallenge challenge, {
     _i1.Transaction? transaction,
@@ -680,7 +734,7 @@ class EmailAccountRequestAttachRowRepository {
   /// Creates a relation between the given [EmailAccountRequest] and [SecretChallenge]
   /// by setting the [EmailAccountRequest]'s foreign key `createAccountChallengeId` to refer to the [SecretChallenge].
   Future<void> createAccountChallenge(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailAccountRequest emailAccountRequest,
     _i2.SecretChallenge createAccountChallenge, {
     _i1.Transaction? transaction,
@@ -712,7 +766,7 @@ class EmailAccountRequestDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> createAccountChallenge(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EmailAccountRequest emailAccountRequest, {
     _i1.Transaction? transaction,
   }) async {

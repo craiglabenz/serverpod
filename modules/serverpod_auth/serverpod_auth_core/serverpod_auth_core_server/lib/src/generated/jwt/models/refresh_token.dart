@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -187,6 +187,7 @@ abstract class RefreshToken
     int? limit,
     int? offset,
     _i1.OrderByBuilder<RefreshTokenTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<RefreshTokenTable>? orderByList,
     RefreshTokenInclude? include,
@@ -196,7 +197,8 @@ abstract class RefreshToken
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(RefreshToken.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(RefreshToken.t),
       include: include,
     );
@@ -468,6 +470,7 @@ class RefreshTokenIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -510,11 +513,12 @@ class RefreshTokenRepository {
   /// );
   /// ```
   Future<List<RefreshToken>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<RefreshTokenTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<RefreshTokenTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<RefreshTokenTable>? orderByList,
     _i1.Transaction? transaction,
@@ -526,7 +530,8 @@ class RefreshTokenRepository {
       where: where?.call(RefreshToken.t),
       orderBy: orderBy?.call(RefreshToken.t),
       orderByList: orderByList?.call(RefreshToken.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -554,10 +559,11 @@ class RefreshTokenRepository {
   /// );
   /// ```
   Future<RefreshToken?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<RefreshTokenTable>? where,
     int? offset,
     _i1.OrderByBuilder<RefreshTokenTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<RefreshTokenTable>? orderByList,
     _i1.Transaction? transaction,
@@ -569,7 +575,8 @@ class RefreshTokenRepository {
       where: where?.call(RefreshToken.t),
       orderBy: orderBy?.call(RefreshToken.t),
       orderByList: orderByList?.call(RefreshToken.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -580,7 +587,7 @@ class RefreshTokenRepository {
 
   /// Finds a single [RefreshToken] by its [id] or null if no such row exists.
   Future<RefreshToken?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     RefreshTokenInclude? include,
@@ -602,14 +609,20 @@ class RefreshTokenRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<RefreshToken>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<RefreshToken> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<RefreshToken>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -617,7 +630,7 @@ class RefreshTokenRepository {
   ///
   /// The returned [RefreshToken] will have its `id` field set.
   Future<RefreshToken> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     RefreshToken row, {
     _i1.Transaction? transaction,
   }) async {
@@ -633,7 +646,7 @@ class RefreshTokenRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<RefreshToken>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<RefreshToken> rows, {
     _i1.ColumnSelections<RefreshTokenTable>? columns,
     _i1.Transaction? transaction,
@@ -649,7 +662,7 @@ class RefreshTokenRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<RefreshToken> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     RefreshToken row, {
     _i1.ColumnSelections<RefreshTokenTable>? columns,
     _i1.Transaction? transaction,
@@ -664,7 +677,7 @@ class RefreshTokenRepository {
   /// Updates a single [RefreshToken] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<RefreshToken?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<RefreshTokenUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -679,13 +692,14 @@ class RefreshTokenRepository {
   /// Updates all [RefreshToken]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<RefreshToken>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<RefreshTokenUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<RefreshTokenTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<RefreshTokenTable>? orderBy,
     _i1.OrderByListBuilder<RefreshTokenTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -696,28 +710,41 @@ class RefreshTokenRepository {
       offset: offset,
       orderBy: orderBy?.call(RefreshToken.t),
       orderByList: orderByList?.call(RefreshToken.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [RefreshToken]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<RefreshToken>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<RefreshToken> rows, {
+    _i1.OrderByBuilder<RefreshTokenTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<RefreshTokenTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<RefreshToken>(
       rows,
+      orderBy: orderBy?.call(RefreshToken.t),
+      orderByList: orderByList?.call(RefreshToken.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [RefreshToken].
   Future<RefreshToken> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     RefreshToken row, {
     _i1.Transaction? transaction,
   }) async {
@@ -728,13 +755,24 @@ class RefreshTokenRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<RefreshToken>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<RefreshTokenTable> where,
+    _i1.OrderByBuilder<RefreshTokenTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<RefreshTokenTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<RefreshToken>(
       where: where(RefreshToken.t),
+      orderBy: orderBy?.call(RefreshToken.t),
+      orderByList: orderByList?.call(RefreshToken.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -742,7 +780,7 @@ class RefreshTokenRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<RefreshTokenTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -756,7 +794,7 @@ class RefreshTokenRepository {
 
   /// Acquires row-level locks on [RefreshToken] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<RefreshTokenTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,
@@ -777,7 +815,7 @@ class RefreshTokenAttachRowRepository {
   /// Creates a relation between the given [RefreshToken] and [AuthUser]
   /// by setting the [RefreshToken]'s foreign key `authUserId` to refer to the [AuthUser].
   Future<void> authUser(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     RefreshToken refreshToken,
     _i2.AuthUser authUser, {
     _i1.Transaction? transaction,

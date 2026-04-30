@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -162,6 +162,7 @@ abstract class ChangedIdTypeSelf
     int? limit,
     int? offset,
     _i1.OrderByBuilder<ChangedIdTypeSelfTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<ChangedIdTypeSelfTable>? orderByList,
     ChangedIdTypeSelfInclude? include,
@@ -171,7 +172,8 @@ abstract class ChangedIdTypeSelf
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(ChangedIdTypeSelf.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(ChangedIdTypeSelf.t),
       include: include,
     );
@@ -434,6 +436,7 @@ class ChangedIdTypeSelfIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -482,11 +485,12 @@ class ChangedIdTypeSelfRepository {
   /// );
   /// ```
   Future<List<ChangedIdTypeSelf>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ChangedIdTypeSelfTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<ChangedIdTypeSelfTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<ChangedIdTypeSelfTable>? orderByList,
     _i1.Transaction? transaction,
@@ -498,7 +502,8 @@ class ChangedIdTypeSelfRepository {
       where: where?.call(ChangedIdTypeSelf.t),
       orderBy: orderBy?.call(ChangedIdTypeSelf.t),
       orderByList: orderByList?.call(ChangedIdTypeSelf.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -526,10 +531,11 @@ class ChangedIdTypeSelfRepository {
   /// );
   /// ```
   Future<ChangedIdTypeSelf?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ChangedIdTypeSelfTable>? where,
     int? offset,
     _i1.OrderByBuilder<ChangedIdTypeSelfTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<ChangedIdTypeSelfTable>? orderByList,
     _i1.Transaction? transaction,
@@ -541,7 +547,8 @@ class ChangedIdTypeSelfRepository {
       where: where?.call(ChangedIdTypeSelf.t),
       orderBy: orderBy?.call(ChangedIdTypeSelf.t),
       orderByList: orderByList?.call(ChangedIdTypeSelf.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -552,7 +559,7 @@ class ChangedIdTypeSelfRepository {
 
   /// Finds a single [ChangedIdTypeSelf] by its [id] or null if no such row exists.
   Future<ChangedIdTypeSelf?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     ChangedIdTypeSelfInclude? include,
@@ -574,14 +581,20 @@ class ChangedIdTypeSelfRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<ChangedIdTypeSelf>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ChangedIdTypeSelf> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<ChangedIdTypeSelf>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -589,7 +602,7 @@ class ChangedIdTypeSelfRepository {
   ///
   /// The returned [ChangedIdTypeSelf] will have its `id` field set.
   Future<ChangedIdTypeSelf> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf row, {
     _i1.Transaction? transaction,
   }) async {
@@ -605,7 +618,7 @@ class ChangedIdTypeSelfRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<ChangedIdTypeSelf>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ChangedIdTypeSelf> rows, {
     _i1.ColumnSelections<ChangedIdTypeSelfTable>? columns,
     _i1.Transaction? transaction,
@@ -621,7 +634,7 @@ class ChangedIdTypeSelfRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<ChangedIdTypeSelf> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf row, {
     _i1.ColumnSelections<ChangedIdTypeSelfTable>? columns,
     _i1.Transaction? transaction,
@@ -636,7 +649,7 @@ class ChangedIdTypeSelfRepository {
   /// Updates a single [ChangedIdTypeSelf] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<ChangedIdTypeSelf?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<ChangedIdTypeSelfUpdateTable>
     columnValues,
@@ -652,7 +665,7 @@ class ChangedIdTypeSelfRepository {
   /// Updates all [ChangedIdTypeSelf]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<ChangedIdTypeSelf>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<ChangedIdTypeSelfUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<ChangedIdTypeSelfTable> where,
@@ -660,6 +673,7 @@ class ChangedIdTypeSelfRepository {
     int? offset,
     _i1.OrderByBuilder<ChangedIdTypeSelfTable>? orderBy,
     _i1.OrderByListBuilder<ChangedIdTypeSelfTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -670,28 +684,41 @@ class ChangedIdTypeSelfRepository {
       offset: offset,
       orderBy: orderBy?.call(ChangedIdTypeSelf.t),
       orderByList: orderByList?.call(ChangedIdTypeSelf.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [ChangedIdTypeSelf]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<ChangedIdTypeSelf>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ChangedIdTypeSelf> rows, {
+    _i1.OrderByBuilder<ChangedIdTypeSelfTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<ChangedIdTypeSelfTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<ChangedIdTypeSelf>(
       rows,
+      orderBy: orderBy?.call(ChangedIdTypeSelf.t),
+      orderByList: orderByList?.call(ChangedIdTypeSelf.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [ChangedIdTypeSelf].
   Future<ChangedIdTypeSelf> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf row, {
     _i1.Transaction? transaction,
   }) async {
@@ -702,13 +729,24 @@ class ChangedIdTypeSelfRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<ChangedIdTypeSelf>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<ChangedIdTypeSelfTable> where,
+    _i1.OrderByBuilder<ChangedIdTypeSelfTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<ChangedIdTypeSelfTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<ChangedIdTypeSelf>(
       where: where(ChangedIdTypeSelf.t),
+      orderBy: orderBy?.call(ChangedIdTypeSelf.t),
+      orderByList: orderByList?.call(ChangedIdTypeSelf.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -716,7 +754,7 @@ class ChangedIdTypeSelfRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ChangedIdTypeSelfTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -730,7 +768,7 @@ class ChangedIdTypeSelfRepository {
 
   /// Acquires row-level locks on [ChangedIdTypeSelf] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<ChangedIdTypeSelfTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,
@@ -751,7 +789,7 @@ class ChangedIdTypeSelfAttachRepository {
   /// Creates a relation between this [ChangedIdTypeSelf] and the given [ChangedIdTypeSelf]s
   /// by setting each [ChangedIdTypeSelf]'s foreign key `parentId` to refer to this [ChangedIdTypeSelf].
   Future<void> children(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf,
     List<_i2.ChangedIdTypeSelf> nestedChangedIdTypeSelf, {
     _i1.Transaction? transaction,
@@ -780,7 +818,7 @@ class ChangedIdTypeSelfAttachRowRepository {
   /// Creates a relation between the given [ChangedIdTypeSelf] and [ChangedIdTypeSelf]
   /// by setting the [ChangedIdTypeSelf]'s foreign key `id` to refer to the [ChangedIdTypeSelf].
   Future<void> previous(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf,
     _i2.ChangedIdTypeSelf previous, {
     _i1.Transaction? transaction,
@@ -803,7 +841,7 @@ class ChangedIdTypeSelfAttachRowRepository {
   /// Creates a relation between the given [ChangedIdTypeSelf] and [ChangedIdTypeSelf]
   /// by setting the [ChangedIdTypeSelf]'s foreign key `nextId` to refer to the [ChangedIdTypeSelf].
   Future<void> next(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf,
     _i2.ChangedIdTypeSelf next, {
     _i1.Transaction? transaction,
@@ -826,7 +864,7 @@ class ChangedIdTypeSelfAttachRowRepository {
   /// Creates a relation between the given [ChangedIdTypeSelf] and [ChangedIdTypeSelf]
   /// by setting the [ChangedIdTypeSelf]'s foreign key `parentId` to refer to the [ChangedIdTypeSelf].
   Future<void> parent(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf,
     _i2.ChangedIdTypeSelf parent, {
     _i1.Transaction? transaction,
@@ -849,7 +887,7 @@ class ChangedIdTypeSelfAttachRowRepository {
   /// Creates a relation between this [ChangedIdTypeSelf] and the given [ChangedIdTypeSelf]
   /// by setting the [ChangedIdTypeSelf]'s foreign key `parentId` to refer to this [ChangedIdTypeSelf].
   Future<void> children(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf,
     _i2.ChangedIdTypeSelf nestedChangedIdTypeSelf, {
     _i1.Transaction? transaction,
@@ -881,7 +919,7 @@ class ChangedIdTypeSelfDetachRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> children(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<_i2.ChangedIdTypeSelf> changedIdTypeSelf, {
     _i1.Transaction? transaction,
   }) async {
@@ -909,7 +947,7 @@ class ChangedIdTypeSelfDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> previous(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf, {
     _i1.Transaction? transaction,
   }) async {
@@ -939,7 +977,7 @@ class ChangedIdTypeSelfDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> next(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf, {
     _i1.Transaction? transaction,
   }) async {
@@ -961,7 +999,7 @@ class ChangedIdTypeSelfDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> parent(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ChangedIdTypeSelf changedIdTypeSelf, {
     _i1.Transaction? transaction,
   }) async {
@@ -983,7 +1021,7 @@ class ChangedIdTypeSelfDetachRowRepository {
   /// This removes the association between the two models without deleting
   /// the related record.
   Future<void> children(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i2.ChangedIdTypeSelf changedIdTypeSelf, {
     _i1.Transaction? transaction,
   }) async {

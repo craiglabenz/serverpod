@@ -127,6 +127,7 @@ abstract class ObjectWithEnum
     int? limit,
     int? offset,
     _i1.OrderByBuilder<ObjectWithEnumTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<ObjectWithEnumTable>? orderByList,
     ObjectWithEnumInclude? include,
@@ -136,7 +137,8 @@ abstract class ObjectWithEnum
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(ObjectWithEnum.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(ObjectWithEnum.t),
       include: include,
     );
@@ -299,6 +301,7 @@ class ObjectWithEnumIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -339,11 +342,12 @@ class ObjectWithEnumRepository {
   /// );
   /// ```
   Future<List<ObjectWithEnum>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ObjectWithEnumTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<ObjectWithEnumTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<ObjectWithEnumTable>? orderByList,
     _i1.Transaction? transaction,
@@ -354,7 +358,8 @@ class ObjectWithEnumRepository {
       where: where?.call(ObjectWithEnum.t),
       orderBy: orderBy?.call(ObjectWithEnum.t),
       orderByList: orderByList?.call(ObjectWithEnum.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -381,10 +386,11 @@ class ObjectWithEnumRepository {
   /// );
   /// ```
   Future<ObjectWithEnum?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ObjectWithEnumTable>? where,
     int? offset,
     _i1.OrderByBuilder<ObjectWithEnumTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<ObjectWithEnumTable>? orderByList,
     _i1.Transaction? transaction,
@@ -395,7 +401,8 @@ class ObjectWithEnumRepository {
       where: where?.call(ObjectWithEnum.t),
       orderBy: orderBy?.call(ObjectWithEnum.t),
       orderByList: orderByList?.call(ObjectWithEnum.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       lockMode: lockMode,
@@ -405,7 +412,7 @@ class ObjectWithEnumRepository {
 
   /// Finds a single [ObjectWithEnum] by its [id] or null if no such row exists.
   Future<ObjectWithEnum?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
     _i1.LockMode? lockMode,
@@ -425,14 +432,20 @@ class ObjectWithEnumRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<ObjectWithEnum>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ObjectWithEnum> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<ObjectWithEnum>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -440,7 +453,7 @@ class ObjectWithEnumRepository {
   ///
   /// The returned [ObjectWithEnum] will have its `id` field set.
   Future<ObjectWithEnum> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ObjectWithEnum row, {
     _i1.Transaction? transaction,
   }) async {
@@ -456,7 +469,7 @@ class ObjectWithEnumRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<ObjectWithEnum>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ObjectWithEnum> rows, {
     _i1.ColumnSelections<ObjectWithEnumTable>? columns,
     _i1.Transaction? transaction,
@@ -472,7 +485,7 @@ class ObjectWithEnumRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<ObjectWithEnum> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ObjectWithEnum row, {
     _i1.ColumnSelections<ObjectWithEnumTable>? columns,
     _i1.Transaction? transaction,
@@ -487,7 +500,7 @@ class ObjectWithEnumRepository {
   /// Updates a single [ObjectWithEnum] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<ObjectWithEnum?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<ObjectWithEnumUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -502,13 +515,14 @@ class ObjectWithEnumRepository {
   /// Updates all [ObjectWithEnum]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<ObjectWithEnum>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<ObjectWithEnumUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<ObjectWithEnumTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<ObjectWithEnumTable>? orderBy,
     _i1.OrderByListBuilder<ObjectWithEnumTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -519,28 +533,41 @@ class ObjectWithEnumRepository {
       offset: offset,
       orderBy: orderBy?.call(ObjectWithEnum.t),
       orderByList: orderByList?.call(ObjectWithEnum.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [ObjectWithEnum]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<ObjectWithEnum>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<ObjectWithEnum> rows, {
+    _i1.OrderByBuilder<ObjectWithEnumTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<ObjectWithEnumTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<ObjectWithEnum>(
       rows,
+      orderBy: orderBy?.call(ObjectWithEnum.t),
+      orderByList: orderByList?.call(ObjectWithEnum.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [ObjectWithEnum].
   Future<ObjectWithEnum> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     ObjectWithEnum row, {
     _i1.Transaction? transaction,
   }) async {
@@ -551,13 +578,24 @@ class ObjectWithEnumRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<ObjectWithEnum>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<ObjectWithEnumTable> where,
+    _i1.OrderByBuilder<ObjectWithEnumTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<ObjectWithEnumTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<ObjectWithEnum>(
       where: where(ObjectWithEnum.t),
+      orderBy: orderBy?.call(ObjectWithEnum.t),
+      orderByList: orderByList?.call(ObjectWithEnum.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -565,7 +603,7 @@ class ObjectWithEnumRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<ObjectWithEnumTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -579,7 +617,7 @@ class ObjectWithEnumRepository {
 
   /// Acquires row-level locks on [ObjectWithEnum] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<ObjectWithEnumTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,

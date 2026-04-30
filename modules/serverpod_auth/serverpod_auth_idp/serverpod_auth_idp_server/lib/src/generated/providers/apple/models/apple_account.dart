@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -201,6 +201,7 @@ abstract class AppleAccount
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AppleAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     AppleAccountInclude? include,
@@ -210,7 +211,8 @@ abstract class AppleAccount
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(AppleAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(AppleAccount.t),
       include: include,
     );
@@ -530,6 +532,7 @@ class AppleAccountIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -572,11 +575,12 @@ class AppleAccountRepository {
   /// );
   /// ```
   Future<List<AppleAccount>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AppleAccountTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AppleAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     _i1.Transaction? transaction,
@@ -586,7 +590,8 @@ class AppleAccountRepository {
       where: where?.call(AppleAccount.t),
       orderBy: orderBy?.call(AppleAccount.t),
       orderByList: orderByList?.call(AppleAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -612,10 +617,11 @@ class AppleAccountRepository {
   /// );
   /// ```
   Future<AppleAccount?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AppleAccountTable>? where,
     int? offset,
     _i1.OrderByBuilder<AppleAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     _i1.Transaction? transaction,
@@ -625,7 +631,8 @@ class AppleAccountRepository {
       where: where?.call(AppleAccount.t),
       orderBy: orderBy?.call(AppleAccount.t),
       orderByList: orderByList?.call(AppleAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -634,7 +641,7 @@ class AppleAccountRepository {
 
   /// Finds a single [AppleAccount] by its [id] or null if no such row exists.
   Future<AppleAccount?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     AppleAccountInclude? include,
@@ -652,14 +659,20 @@ class AppleAccountRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<AppleAccount>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AppleAccount> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<AppleAccount>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -667,7 +680,7 @@ class AppleAccountRepository {
   ///
   /// The returned [AppleAccount] will have its `id` field set.
   Future<AppleAccount> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AppleAccount row, {
     _i1.Transaction? transaction,
   }) async {
@@ -683,7 +696,7 @@ class AppleAccountRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<AppleAccount>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AppleAccount> rows, {
     _i1.ColumnSelections<AppleAccountTable>? columns,
     _i1.Transaction? transaction,
@@ -699,7 +712,7 @@ class AppleAccountRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<AppleAccount> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AppleAccount row, {
     _i1.ColumnSelections<AppleAccountTable>? columns,
     _i1.Transaction? transaction,
@@ -714,7 +727,7 @@ class AppleAccountRepository {
   /// Updates a single [AppleAccount] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<AppleAccount?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<AppleAccountUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -729,13 +742,14 @@ class AppleAccountRepository {
   /// Updates all [AppleAccount]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<AppleAccount>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<AppleAccountUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<AppleAccountTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<AppleAccountTable>? orderBy,
     _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -746,28 +760,41 @@ class AppleAccountRepository {
       offset: offset,
       orderBy: orderBy?.call(AppleAccount.t),
       orderByList: orderByList?.call(AppleAccount.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [AppleAccount]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<AppleAccount>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<AppleAccount> rows, {
+    _i1.OrderByBuilder<AppleAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<AppleAccount>(
       rows,
+      orderBy: orderBy?.call(AppleAccount.t),
+      orderByList: orderByList?.call(AppleAccount.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [AppleAccount].
   Future<AppleAccount> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AppleAccount row, {
     _i1.Transaction? transaction,
   }) async {
@@ -778,13 +805,24 @@ class AppleAccountRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<AppleAccount>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<AppleAccountTable> where,
+    _i1.OrderByBuilder<AppleAccountTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<AppleAccountTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<AppleAccount>(
       where: where(AppleAccount.t),
+      orderBy: orderBy?.call(AppleAccount.t),
+      orderByList: orderByList?.call(AppleAccount.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -792,7 +830,7 @@ class AppleAccountRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<AppleAccountTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -800,6 +838,22 @@ class AppleAccountRepository {
     return session.db.count<AppleAccount>(
       where: where?.call(AppleAccount.t),
       limit: limit,
+      transaction: transaction,
+    );
+  }
+
+  /// Acquires row-level locks on [AppleAccount] rows matching the [where] expression.
+  Future<void> lockRows(
+    _i1.DatabaseSession session, {
+    required _i1.WhereExpressionBuilder<AppleAccountTable> where,
+    required _i1.LockMode lockMode,
+    required _i1.Transaction transaction,
+    _i1.LockBehavior lockBehavior = _i1.LockBehavior.wait,
+  }) async {
+    return session.db.lockRows<AppleAccount>(
+      where: where(AppleAccount.t),
+      lockMode: lockMode,
+      lockBehavior: lockBehavior,
       transaction: transaction,
     );
   }
@@ -811,7 +865,7 @@ class AppleAccountAttachRowRepository {
   /// Creates a relation between the given [AppleAccount] and [AuthUser]
   /// by setting the [AppleAccount]'s foreign key `authUserId` to refer to the [AuthUser].
   Future<void> authUser(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     AppleAccount appleAccount,
     _i2.AuthUser authUser, {
     _i1.Transaction? transaction,

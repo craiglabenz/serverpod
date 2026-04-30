@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -100,6 +100,7 @@ abstract class CompanyUuid
     int? limit,
     int? offset,
     _i1.OrderByBuilder<CompanyUuidTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<CompanyUuidTable>? orderByList,
     CompanyUuidInclude? include,
@@ -109,7 +110,8 @@ abstract class CompanyUuid
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(CompanyUuid.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(CompanyUuid.t),
       include: include,
     );
@@ -239,6 +241,7 @@ class CompanyUuidIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -281,11 +284,12 @@ class CompanyUuidRepository {
   /// );
   /// ```
   Future<List<CompanyUuid>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<CompanyUuidTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<CompanyUuidTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<CompanyUuidTable>? orderByList,
     _i1.Transaction? transaction,
@@ -297,7 +301,8 @@ class CompanyUuidRepository {
       where: where?.call(CompanyUuid.t),
       orderBy: orderBy?.call(CompanyUuid.t),
       orderByList: orderByList?.call(CompanyUuid.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -325,10 +330,11 @@ class CompanyUuidRepository {
   /// );
   /// ```
   Future<CompanyUuid?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<CompanyUuidTable>? where,
     int? offset,
     _i1.OrderByBuilder<CompanyUuidTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<CompanyUuidTable>? orderByList,
     _i1.Transaction? transaction,
@@ -340,7 +346,8 @@ class CompanyUuidRepository {
       where: where?.call(CompanyUuid.t),
       orderBy: orderBy?.call(CompanyUuid.t),
       orderByList: orderByList?.call(CompanyUuid.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -351,7 +358,7 @@ class CompanyUuidRepository {
 
   /// Finds a single [CompanyUuid] by its [id] or null if no such row exists.
   Future<CompanyUuid?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     CompanyUuidInclude? include,
@@ -373,14 +380,20 @@ class CompanyUuidRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<CompanyUuid>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<CompanyUuid> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<CompanyUuid>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -388,7 +401,7 @@ class CompanyUuidRepository {
   ///
   /// The returned [CompanyUuid] will have its `id` field set.
   Future<CompanyUuid> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     CompanyUuid row, {
     _i1.Transaction? transaction,
   }) async {
@@ -404,7 +417,7 @@ class CompanyUuidRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<CompanyUuid>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<CompanyUuid> rows, {
     _i1.ColumnSelections<CompanyUuidTable>? columns,
     _i1.Transaction? transaction,
@@ -420,7 +433,7 @@ class CompanyUuidRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<CompanyUuid> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     CompanyUuid row, {
     _i1.ColumnSelections<CompanyUuidTable>? columns,
     _i1.Transaction? transaction,
@@ -435,7 +448,7 @@ class CompanyUuidRepository {
   /// Updates a single [CompanyUuid] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<CompanyUuid?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<CompanyUuidUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -450,13 +463,14 @@ class CompanyUuidRepository {
   /// Updates all [CompanyUuid]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<CompanyUuid>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<CompanyUuidUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<CompanyUuidTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<CompanyUuidTable>? orderBy,
     _i1.OrderByListBuilder<CompanyUuidTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -467,28 +481,41 @@ class CompanyUuidRepository {
       offset: offset,
       orderBy: orderBy?.call(CompanyUuid.t),
       orderByList: orderByList?.call(CompanyUuid.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [CompanyUuid]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<CompanyUuid>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<CompanyUuid> rows, {
+    _i1.OrderByBuilder<CompanyUuidTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<CompanyUuidTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<CompanyUuid>(
       rows,
+      orderBy: orderBy?.call(CompanyUuid.t),
+      orderByList: orderByList?.call(CompanyUuid.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [CompanyUuid].
   Future<CompanyUuid> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     CompanyUuid row, {
     _i1.Transaction? transaction,
   }) async {
@@ -499,13 +526,24 @@ class CompanyUuidRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<CompanyUuid>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<CompanyUuidTable> where,
+    _i1.OrderByBuilder<CompanyUuidTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<CompanyUuidTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<CompanyUuid>(
       where: where(CompanyUuid.t),
+      orderBy: orderBy?.call(CompanyUuid.t),
+      orderByList: orderByList?.call(CompanyUuid.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -513,7 +551,7 @@ class CompanyUuidRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<CompanyUuidTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -527,7 +565,7 @@ class CompanyUuidRepository {
 
   /// Acquires row-level locks on [CompanyUuid] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<CompanyUuidTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,
@@ -548,7 +586,7 @@ class CompanyUuidAttachRowRepository {
   /// Creates a relation between the given [CompanyUuid] and [TownInt]
   /// by setting the [CompanyUuid]'s foreign key `townId` to refer to the [TownInt].
   Future<void> town(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     CompanyUuid companyUuid,
     _i2.TownInt town, {
     _i1.Transaction? transaction,

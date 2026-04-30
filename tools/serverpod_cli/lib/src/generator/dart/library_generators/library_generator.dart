@@ -116,16 +116,13 @@ class LibraryGenerator {
             ..type = TypeReference(
               (t) => t
                 ..symbol = 'List'
-                ..types.add(
-                  refer('TableDefinition', serverpodProtocolUrl(serverCode)),
-                ),
+                ..types.add(_tableDefinitionReference(serverCode)),
             )
             ..assignment =
                 createDatabaseDefinitionFromModels(
                   allModels,
                   config.name,
                   config.modulesAll,
-                  dialect: config.databaseDialect,
                 ).toCode(
                   config: config,
                   serverCode: serverCode,
@@ -290,7 +287,7 @@ class LibraryGenerator {
               for (var packageName in config.sharedModelsSourcePathsParts.keys)
                 Code.scope(
                   (a) =>
-                      'try{return ${a(refer('Protocol', 'package:$packageName/$packageName.dart'))}().deserialize<T>(data,t);}'
+                      'try{return ${a(refer('Protocol', packageName == 'serverpod_database' && config.name != 'serverpod' ? serverpodDatabaseUrl(serverCode) : 'package:$packageName/$packageName.dart'))}().deserialize<T>(data,t);}'
                       'on ${a(refer('DeserializationTypeNotFoundException', serverpodUrl(serverCode)))} catch(_){}',
                 ),
             if (config.name != 'serverpod' &&
@@ -510,9 +507,7 @@ class LibraryGenerator {
             ..returns = TypeReference(
               (t) => t
                 ..symbol = 'List'
-                ..types.add(
-                  refer('TableDefinition', serverpodProtocolUrl(serverCode)),
-                ),
+                ..types.add(_tableDefinitionReference(serverCode)),
             )
             ..body = refer('targetTableDefinitions').code,
         ),
@@ -2001,7 +1996,13 @@ extension on TypeDefinition {
               'mapContainerToJson($name.${namedField.recordFieldName!})',
             )
           else
-            Code('$name.${namedField.recordFieldName!}'),
+            Code(
+              namedField.isSerializedValue
+                  ? '$name.${namedField.recordFieldName!}'
+                  : namedField.nullable
+                  ? '$name.${namedField.recordFieldName!}?.toJson()'
+                  : '$name.${namedField.recordFieldName!}.toJson()',
+            ),
           const Code(','),
         ],
         const Code('},'),
@@ -2069,7 +2070,7 @@ extension on DatabaseDefinition {
   }) {
     return literalList([
       for (var table in tables)
-        refer('TableDefinition', serverpodProtocolUrl(serverCode)).call([], {
+        _tableDefinitionReference(serverCode).call([], {
           'name': literalString(table.name),
           if (table.dartName != null)
             'dartName': literalString(table.dartName!),
@@ -2158,6 +2159,11 @@ extension on DatabaseDefinition {
                 'type': literalString(index.type),
                 'isUnique': literalBool(index.isUnique),
                 'isPrimary': literalBool(index.isPrimary),
+                if (index.ginOperatorClass != null)
+                  'ginOperatorClass': refer(
+                    'GinOperatorClass.${index.ginOperatorClass!.name}',
+                    serverpodProtocolUrl(serverCode),
+                  ),
                 if (index.vectorDistanceFunction != null)
                   'vectorDistanceFunction': refer(
                     'VectorDistanceFunction.${index.vectorDistanceFunction!.name}',
@@ -2215,6 +2221,9 @@ extension on List<SerializableModelDefinition> {
     return sorted;
   }
 }
+
+Reference _tableDefinitionReference(bool serverCode) =>
+    refer('TableDefinition', serverpodDatabaseUrl(serverCode));
 
 /// Builds inheritance-related annotations for endpoint methods.
 ///

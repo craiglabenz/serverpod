@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -138,6 +138,7 @@ abstract class UserProfileImage
     int? limit,
     int? offset,
     _i1.OrderByBuilder<UserProfileImageTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserProfileImageTable>? orderByList,
     UserProfileImageInclude? include,
@@ -147,7 +148,8 @@ abstract class UserProfileImage
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(UserProfileImage.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(UserProfileImage.t),
       include: include,
     );
@@ -338,6 +340,7 @@ class UserProfileImageIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -380,11 +383,12 @@ class UserProfileImageRepository {
   /// );
   /// ```
   Future<List<UserProfileImage>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserProfileImageTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<UserProfileImageTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserProfileImageTable>? orderByList,
     _i1.Transaction? transaction,
@@ -396,7 +400,8 @@ class UserProfileImageRepository {
       where: where?.call(UserProfileImage.t),
       orderBy: orderBy?.call(UserProfileImage.t),
       orderByList: orderByList?.call(UserProfileImage.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -424,10 +429,11 @@ class UserProfileImageRepository {
   /// );
   /// ```
   Future<UserProfileImage?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserProfileImageTable>? where,
     int? offset,
     _i1.OrderByBuilder<UserProfileImageTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<UserProfileImageTable>? orderByList,
     _i1.Transaction? transaction,
@@ -439,7 +445,8 @@ class UserProfileImageRepository {
       where: where?.call(UserProfileImage.t),
       orderBy: orderBy?.call(UserProfileImage.t),
       orderByList: orderByList?.call(UserProfileImage.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -450,7 +457,7 @@ class UserProfileImageRepository {
 
   /// Finds a single [UserProfileImage] by its [id] or null if no such row exists.
   Future<UserProfileImage?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     _i1.Transaction? transaction,
     UserProfileImageInclude? include,
@@ -472,14 +479,20 @@ class UserProfileImageRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<UserProfileImage>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserProfileImage> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<UserProfileImage>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -487,7 +500,7 @@ class UserProfileImageRepository {
   ///
   /// The returned [UserProfileImage] will have its `id` field set.
   Future<UserProfileImage> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserProfileImage row, {
     _i1.Transaction? transaction,
   }) async {
@@ -503,7 +516,7 @@ class UserProfileImageRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<UserProfileImage>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserProfileImage> rows, {
     _i1.ColumnSelections<UserProfileImageTable>? columns,
     _i1.Transaction? transaction,
@@ -519,7 +532,7 @@ class UserProfileImageRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<UserProfileImage> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserProfileImage row, {
     _i1.ColumnSelections<UserProfileImageTable>? columns,
     _i1.Transaction? transaction,
@@ -534,7 +547,7 @@ class UserProfileImageRepository {
   /// Updates a single [UserProfileImage] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<UserProfileImage?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     _i1.UuidValue id, {
     required _i1.ColumnValueListBuilder<UserProfileImageUpdateTable>
     columnValues,
@@ -550,7 +563,7 @@ class UserProfileImageRepository {
   /// Updates all [UserProfileImage]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<UserProfileImage>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<UserProfileImageUpdateTable>
     columnValues,
     required _i1.WhereExpressionBuilder<UserProfileImageTable> where,
@@ -558,6 +571,7 @@ class UserProfileImageRepository {
     int? offset,
     _i1.OrderByBuilder<UserProfileImageTable>? orderBy,
     _i1.OrderByListBuilder<UserProfileImageTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -568,28 +582,41 @@ class UserProfileImageRepository {
       offset: offset,
       orderBy: orderBy?.call(UserProfileImage.t),
       orderByList: orderByList?.call(UserProfileImage.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [UserProfileImage]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<UserProfileImage>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<UserProfileImage> rows, {
+    _i1.OrderByBuilder<UserProfileImageTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<UserProfileImageTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<UserProfileImage>(
       rows,
+      orderBy: orderBy?.call(UserProfileImage.t),
+      orderByList: orderByList?.call(UserProfileImage.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [UserProfileImage].
   Future<UserProfileImage> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserProfileImage row, {
     _i1.Transaction? transaction,
   }) async {
@@ -600,13 +627,24 @@ class UserProfileImageRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<UserProfileImage>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<UserProfileImageTable> where,
+    _i1.OrderByBuilder<UserProfileImageTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<UserProfileImageTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<UserProfileImage>(
       where: where(UserProfileImage.t),
+      orderBy: orderBy?.call(UserProfileImage.t),
+      orderByList: orderByList?.call(UserProfileImage.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -614,7 +652,7 @@ class UserProfileImageRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<UserProfileImageTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -628,7 +666,7 @@ class UserProfileImageRepository {
 
   /// Acquires row-level locks on [UserProfileImage] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<UserProfileImageTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,
@@ -649,7 +687,7 @@ class UserProfileImageAttachRowRepository {
   /// Creates a relation between the given [UserProfileImage] and [UserProfile]
   /// by setting the [UserProfileImage]'s foreign key `userProfileId` to refer to the [UserProfile].
   Future<void> userProfile(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     UserProfileImage userProfileImage,
     _i2.UserProfile userProfile, {
     _i1.Transaction? transaction,

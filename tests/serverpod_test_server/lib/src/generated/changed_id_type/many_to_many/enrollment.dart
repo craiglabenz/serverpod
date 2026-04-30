@@ -8,7 +8,7 @@
 // ignore_for_file: type_literal_in_constant_pattern
 // ignore_for_file: use_super_parameters
 // ignore_for_file: invalid_use_of_internal_member
-// ignore_for_file: unnecessary_null_comparison
+// ignore_for_file: dead_code, unnecessary_null_comparison
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
@@ -123,6 +123,7 @@ abstract class EnrollmentInt
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EnrollmentIntTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EnrollmentIntTable>? orderByList,
     EnrollmentIntInclude? include,
@@ -132,7 +133,8 @@ abstract class EnrollmentInt
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(EnrollmentInt.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(EnrollmentInt.t),
       include: include,
     );
@@ -297,6 +299,7 @@ class EnrollmentIntIncludeList extends _i1.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -339,11 +342,12 @@ class EnrollmentIntRepository {
   /// );
   /// ```
   Future<List<EnrollmentInt>> find(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EnrollmentIntTable>? where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EnrollmentIntTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EnrollmentIntTable>? orderByList,
     _i1.Transaction? transaction,
@@ -355,7 +359,8 @@ class EnrollmentIntRepository {
       where: where?.call(EnrollmentInt.t),
       orderBy: orderBy?.call(EnrollmentInt.t),
       orderByList: orderByList?.call(EnrollmentInt.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -383,10 +388,11 @@ class EnrollmentIntRepository {
   /// );
   /// ```
   Future<EnrollmentInt?> findFirstRow(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EnrollmentIntTable>? where,
     int? offset,
     _i1.OrderByBuilder<EnrollmentIntTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.OrderByListBuilder<EnrollmentIntTable>? orderByList,
     _i1.Transaction? transaction,
@@ -398,7 +404,8 @@ class EnrollmentIntRepository {
       where: where?.call(EnrollmentInt.t),
       orderBy: orderBy?.call(EnrollmentInt.t),
       orderByList: orderByList?.call(EnrollmentInt.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       include: include,
@@ -409,7 +416,7 @@ class EnrollmentIntRepository {
 
   /// Finds a single [EnrollmentInt] by its [id] or null if no such row exists.
   Future<EnrollmentInt?> findById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     _i1.Transaction? transaction,
     EnrollmentIntInclude? include,
@@ -431,14 +438,20 @@ class EnrollmentIntRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<EnrollmentInt>> insert(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EnrollmentInt> rows, {
     _i1.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<EnrollmentInt>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -446,7 +459,7 @@ class EnrollmentIntRepository {
   ///
   /// The returned [EnrollmentInt] will have its `id` field set.
   Future<EnrollmentInt> insertRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EnrollmentInt row, {
     _i1.Transaction? transaction,
   }) async {
@@ -462,7 +475,7 @@ class EnrollmentIntRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<EnrollmentInt>> update(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EnrollmentInt> rows, {
     _i1.ColumnSelections<EnrollmentIntTable>? columns,
     _i1.Transaction? transaction,
@@ -478,7 +491,7 @@ class EnrollmentIntRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<EnrollmentInt> updateRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EnrollmentInt row, {
     _i1.ColumnSelections<EnrollmentIntTable>? columns,
     _i1.Transaction? transaction,
@@ -493,7 +506,7 @@ class EnrollmentIntRepository {
   /// Updates a single [EnrollmentInt] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<EnrollmentInt?> updateById(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     int id, {
     required _i1.ColumnValueListBuilder<EnrollmentIntUpdateTable> columnValues,
     _i1.Transaction? transaction,
@@ -508,13 +521,14 @@ class EnrollmentIntRepository {
   /// Updates all [EnrollmentInt]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<EnrollmentInt>> updateWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.ColumnValueListBuilder<EnrollmentIntUpdateTable> columnValues,
     required _i1.WhereExpressionBuilder<EnrollmentIntTable> where,
     int? limit,
     int? offset,
     _i1.OrderByBuilder<EnrollmentIntTable>? orderBy,
     _i1.OrderByListBuilder<EnrollmentIntTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i1.Transaction? transaction,
   }) async {
@@ -525,28 +539,41 @@ class EnrollmentIntRepository {
       offset: offset,
       orderBy: orderBy?.call(EnrollmentInt.t),
       orderByList: orderByList?.call(EnrollmentInt.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [EnrollmentInt]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<EnrollmentInt>> delete(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     List<EnrollmentInt> rows, {
+    _i1.OrderByBuilder<EnrollmentIntTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<EnrollmentIntTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.delete<EnrollmentInt>(
       rows,
+      orderBy: orderBy?.call(EnrollmentInt.t),
+      orderByList: orderByList?.call(EnrollmentInt.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [EnrollmentInt].
   Future<EnrollmentInt> deleteRow(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EnrollmentInt row, {
     _i1.Transaction? transaction,
   }) async {
@@ -557,13 +584,24 @@ class EnrollmentIntRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<EnrollmentInt>> deleteWhere(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<EnrollmentIntTable> where,
+    _i1.OrderByBuilder<EnrollmentIntTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i1.OrderByListBuilder<EnrollmentIntTable>? orderByList,
     _i1.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<EnrollmentInt>(
       where: where(EnrollmentInt.t),
+      orderBy: orderBy?.call(EnrollmentInt.t),
+      orderByList: orderByList?.call(EnrollmentInt.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -571,7 +609,7 @@ class EnrollmentIntRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     _i1.WhereExpressionBuilder<EnrollmentIntTable>? where,
     int? limit,
     _i1.Transaction? transaction,
@@ -585,7 +623,7 @@ class EnrollmentIntRepository {
 
   /// Acquires row-level locks on [EnrollmentInt] rows matching the [where] expression.
   Future<void> lockRows(
-    _i1.Session session, {
+    _i1.DatabaseSession session, {
     required _i1.WhereExpressionBuilder<EnrollmentIntTable> where,
     required _i1.LockMode lockMode,
     required _i1.Transaction transaction,
@@ -606,7 +644,7 @@ class EnrollmentIntAttachRowRepository {
   /// Creates a relation between the given [EnrollmentInt] and [StudentUuid]
   /// by setting the [EnrollmentInt]'s foreign key `studentId` to refer to the [StudentUuid].
   Future<void> student(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EnrollmentInt enrollmentInt,
     _i2.StudentUuid student, {
     _i1.Transaction? transaction,
@@ -629,7 +667,7 @@ class EnrollmentIntAttachRowRepository {
   /// Creates a relation between the given [EnrollmentInt] and [CourseUuid]
   /// by setting the [EnrollmentInt]'s foreign key `courseId` to refer to the [CourseUuid].
   Future<void> course(
-    _i1.Session session,
+    _i1.DatabaseSession session,
     EnrollmentInt enrollmentInt,
     _i3.CourseUuid course, {
     _i1.Transaction? transaction,

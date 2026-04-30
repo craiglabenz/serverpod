@@ -93,6 +93,7 @@ abstract class ChildClassWithoutId extends _i1.ParentClassWithoutId
     int? limit,
     int? offset,
     _i2.OrderByBuilder<ChildClassWithoutIdTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i2.OrderByListBuilder<ChildClassWithoutIdTable>? orderByList,
     ChildClassWithoutIdInclude? include,
@@ -102,7 +103,8 @@ abstract class ChildClassWithoutId extends _i1.ParentClassWithoutId
       limit: limit,
       offset: offset,
       orderBy: orderBy?.call(ChildClassWithoutId.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use_from_same_package
+          orderDescending,
       orderByList: orderByList?.call(ChildClassWithoutId.t),
       include: include,
     );
@@ -220,6 +222,7 @@ class ChildClassWithoutIdIncludeList extends _i2.IncludeList {
     super.limit,
     super.offset,
     super.orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     super.orderDescending,
     super.orderByList,
     super.include,
@@ -260,11 +263,12 @@ class ChildClassWithoutIdRepository {
   /// );
   /// ```
   Future<List<ChildClassWithoutId>> find(
-    _i2.Session session, {
+    _i2.DatabaseSession session, {
     _i2.WhereExpressionBuilder<ChildClassWithoutIdTable>? where,
     int? limit,
     int? offset,
     _i2.OrderByBuilder<ChildClassWithoutIdTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i2.OrderByListBuilder<ChildClassWithoutIdTable>? orderByList,
     _i2.Transaction? transaction,
@@ -275,7 +279,8 @@ class ChildClassWithoutIdRepository {
       where: where?.call(ChildClassWithoutId.t),
       orderBy: orderBy?.call(ChildClassWithoutId.t),
       orderByList: orderByList?.call(ChildClassWithoutId.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       limit: limit,
       offset: offset,
       transaction: transaction,
@@ -302,10 +307,11 @@ class ChildClassWithoutIdRepository {
   /// );
   /// ```
   Future<ChildClassWithoutId?> findFirstRow(
-    _i2.Session session, {
+    _i2.DatabaseSession session, {
     _i2.WhereExpressionBuilder<ChildClassWithoutIdTable>? where,
     int? offset,
     _i2.OrderByBuilder<ChildClassWithoutIdTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i2.OrderByListBuilder<ChildClassWithoutIdTable>? orderByList,
     _i2.Transaction? transaction,
@@ -316,7 +322,8 @@ class ChildClassWithoutIdRepository {
       where: where?.call(ChildClassWithoutId.t),
       orderBy: orderBy?.call(ChildClassWithoutId.t),
       orderByList: orderByList?.call(ChildClassWithoutId.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       offset: offset,
       transaction: transaction,
       lockMode: lockMode,
@@ -326,7 +333,7 @@ class ChildClassWithoutIdRepository {
 
   /// Finds a single [ChildClassWithoutId] by its [id] or null if no such row exists.
   Future<ChildClassWithoutId?> findById(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     _i2.UuidValue id, {
     _i2.Transaction? transaction,
     _i2.LockMode? lockMode,
@@ -346,14 +353,20 @@ class ChildClassWithoutIdRepository {
   ///
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// insert, none of the rows will be inserted.
+  ///
+  /// If [ignoreConflicts] is set to `true`, rows that conflict with existing
+  /// rows are silently skipped, and only the successfully inserted rows are
+  /// returned.
   Future<List<ChildClassWithoutId>> insert(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     List<ChildClassWithoutId> rows, {
     _i2.Transaction? transaction,
+    bool ignoreConflicts = false,
   }) async {
     return session.db.insert<ChildClassWithoutId>(
       rows,
       transaction: transaction,
+      ignoreConflicts: ignoreConflicts,
     );
   }
 
@@ -361,7 +374,7 @@ class ChildClassWithoutIdRepository {
   ///
   /// The returned [ChildClassWithoutId] will have its `id` field set.
   Future<ChildClassWithoutId> insertRow(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     ChildClassWithoutId row, {
     _i2.Transaction? transaction,
   }) async {
@@ -377,7 +390,7 @@ class ChildClassWithoutIdRepository {
   /// This is an atomic operation, meaning that if one of the rows fails to
   /// update, none of the rows will be updated.
   Future<List<ChildClassWithoutId>> update(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     List<ChildClassWithoutId> rows, {
     _i2.ColumnSelections<ChildClassWithoutIdTable>? columns,
     _i2.Transaction? transaction,
@@ -393,7 +406,7 @@ class ChildClassWithoutIdRepository {
   /// Optionally, a list of [columns] can be provided to only update those
   /// columns. Defaults to all columns.
   Future<ChildClassWithoutId> updateRow(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     ChildClassWithoutId row, {
     _i2.ColumnSelections<ChildClassWithoutIdTable>? columns,
     _i2.Transaction? transaction,
@@ -408,7 +421,7 @@ class ChildClassWithoutIdRepository {
   /// Updates a single [ChildClassWithoutId] by its [id] with the specified [columnValues].
   /// Returns the updated row or null if no row with the given id exists.
   Future<ChildClassWithoutId?> updateById(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     _i2.UuidValue id, {
     required _i2.ColumnValueListBuilder<ChildClassWithoutIdUpdateTable>
     columnValues,
@@ -424,7 +437,7 @@ class ChildClassWithoutIdRepository {
   /// Updates all [ChildClassWithoutId]s matching the [where] expression with the specified [columnValues].
   /// Returns the list of updated rows.
   Future<List<ChildClassWithoutId>> updateWhere(
-    _i2.Session session, {
+    _i2.DatabaseSession session, {
     required _i2.ColumnValueListBuilder<ChildClassWithoutIdUpdateTable>
     columnValues,
     required _i2.WhereExpressionBuilder<ChildClassWithoutIdTable> where,
@@ -432,6 +445,7 @@ class ChildClassWithoutIdRepository {
     int? offset,
     _i2.OrderByBuilder<ChildClassWithoutIdTable>? orderBy,
     _i2.OrderByListBuilder<ChildClassWithoutIdTable>? orderByList,
+    @Deprecated('Use desc() on the orderBy column instead.')
     bool orderDescending = false,
     _i2.Transaction? transaction,
   }) async {
@@ -442,28 +456,41 @@ class ChildClassWithoutIdRepository {
       offset: offset,
       orderBy: orderBy?.call(ChildClassWithoutId.t),
       orderByList: orderByList?.call(ChildClassWithoutId.t),
-      orderDescending: orderDescending,
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes all [ChildClassWithoutId]s in the list and returns the deleted rows.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
+  ///
   /// This is an atomic operation, meaning that if one of the rows fail to
   /// be deleted, none of the rows will be deleted.
   Future<List<ChildClassWithoutId>> delete(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     List<ChildClassWithoutId> rows, {
+    _i2.OrderByBuilder<ChildClassWithoutIdTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i2.OrderByListBuilder<ChildClassWithoutIdTable>? orderByList,
     _i2.Transaction? transaction,
   }) async {
     return session.db.delete<ChildClassWithoutId>(
       rows,
+      orderBy: orderBy?.call(ChildClassWithoutId.t),
+      orderByList: orderByList?.call(ChildClassWithoutId.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
 
   /// Deletes a single [ChildClassWithoutId].
   Future<ChildClassWithoutId> deleteRow(
-    _i2.Session session,
+    _i2.DatabaseSession session,
     ChildClassWithoutId row, {
     _i2.Transaction? transaction,
   }) async {
@@ -474,13 +501,24 @@ class ChildClassWithoutIdRepository {
   }
 
   /// Deletes all rows matching the [where] expression.
+  ///
+  /// To specify the order of the returned rows use [orderBy] or [orderByList]
+  /// when sorting by multiple columns.
   Future<List<ChildClassWithoutId>> deleteWhere(
-    _i2.Session session, {
+    _i2.DatabaseSession session, {
     required _i2.WhereExpressionBuilder<ChildClassWithoutIdTable> where,
+    _i2.OrderByBuilder<ChildClassWithoutIdTable>? orderBy,
+    @Deprecated('Use desc() on the orderBy column instead.')
+    bool orderDescending = false,
+    _i2.OrderByListBuilder<ChildClassWithoutIdTable>? orderByList,
     _i2.Transaction? transaction,
   }) async {
     return session.db.deleteWhere<ChildClassWithoutId>(
       where: where(ChildClassWithoutId.t),
+      orderBy: orderBy?.call(ChildClassWithoutId.t),
+      orderByList: orderByList?.call(ChildClassWithoutId.t),
+      orderDescending: // ignore: deprecated_member_use
+          orderDescending,
       transaction: transaction,
     );
   }
@@ -488,7 +526,7 @@ class ChildClassWithoutIdRepository {
   /// Counts the number of rows matching the [where] expression. If omitted,
   /// will return the count of all rows in the table.
   Future<int> count(
-    _i2.Session session, {
+    _i2.DatabaseSession session, {
     _i2.WhereExpressionBuilder<ChildClassWithoutIdTable>? where,
     int? limit,
     _i2.Transaction? transaction,
@@ -502,7 +540,7 @@ class ChildClassWithoutIdRepository {
 
   /// Acquires row-level locks on [ChildClassWithoutId] rows matching the [where] expression.
   Future<void> lockRows(
-    _i2.Session session, {
+    _i2.DatabaseSession session, {
     required _i2.WhereExpressionBuilder<ChildClassWithoutIdTable> where,
     required _i2.LockMode lockMode,
     required _i2.Transaction transaction,
