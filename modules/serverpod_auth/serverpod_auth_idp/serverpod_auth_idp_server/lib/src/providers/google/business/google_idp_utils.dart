@@ -110,10 +110,15 @@ class GoogleIdpUtils {
     final currentAuthUserId = session.authenticated?.authUserId;
     final userIsAuthenticated = currentAuthUserId != null;
     final otherUserId = googleAccount?.authUserId;
-    final isSameUser = otherUserId != currentAuthUserId;
+    final isSameUser = otherUserId == currentAuthUserId;
 
     if (googleAccountExists && userIsAuthenticated && !isSameUser) {
       if (!shouldMergeAccounts) {
+        session.log(
+          'User $currentAuthUserId tried to authenticate with Google account '
+          '$otherUserId but account merge was not enabled.',
+          level: LogLevel.error,
+        );
         throw AccountAlreadyLinkedException();
       }
 
@@ -149,8 +154,12 @@ class GoogleIdpUtils {
       if (googleAccount.authUserId != currentAuthUserId) {
         session.log(
           'The account merge between $currentAuthUserId and $otherUserId failed '
-          'to map GoogleAccount Id ${googleAccount.id} to $otherUserId.',
+          'to map GoogleAccount Id ${googleAccount.id} to $currentAuthUserId.',
           level: LogLevel.error,
+        );
+        throw AccountMergeFailedException(
+          userToKeepId: currentAuthUserId,
+          userToRemoveId: otherUserId!,
         );
       }
     }
